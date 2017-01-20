@@ -1,0 +1,96 @@
+<!doctype html>
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+    <title>paper-timezone Demo</title>
+     <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+     <script>
+    	window.Polymer = {lazyRegister: true, dom: 'shadow'};
+    </script>
+    <link rel="import" href="../paper-timezone.html">
+    
+</head>
+
+<body>
+     <template is="dom-bind" id="app" >
+         <style is="custom-style">
+            #timezone2 {
+                    --paper-timezone-background-color: black;
+                    --paper-timezone-label-color : green;
+                    --paper-timezone-circle-border-color:yellow;
+                    --paper-timezone-circle-background-color:red;
+                    --paper-timezone-pointer-color:lightgreen;
+            }
+
+            .demo{
+                padding: 15px;
+            }
+    </style>
+     <paper-material class="demo"  elevation="1">
+          <paper-material class="demo"  elevation="1">
+          <code>
+    &lt;paper-timezone label="Timezone (Continent/City)" timezone="{{<span>timezone</span>}}" responsive-width="[[<span>responsiveWidth</span>]]"  &gt;
+    &lt;/paper-timezone&gt;
+    </code>
+     </paper-material>
+        <p>paper-timezone with responsive width. Resize browser to see dropdown view.</p>
+        <paper-timezone name="timezone" id="timezone" format-type="hours"  timezone="{{timezone}}" responsive-width="[[responsiveWidth]]" label="Timezone (Continent/City)" error-message="Please enter a timezone offset"></paper-timezone>
+        <p>Timezone</p>
+        <p>Location:[[timezone.location]]</p>
+        <p>Offset:[[timezone.offset]]</p>
+        </paper-material>
+        <br>
+        <paper-material class="demo" elevation="1">
+            <paper-material class="demo"  elevation="1">
+                <code>
+                        &lt;paper-timezone label="Timezone (Continent/City)" timezone="{{<span>timezone</span>}}" &gt;
+                        &lt;/paper-timezone&gt;
+                </code>
+            </paper-material>
+        <p>paper-timezone without responsive width. Dialog will be hidden in screen width less than 768px</p>
+        <paper-timezone name="timezone" id="timezone1" timezone="{{timezone2}}" label="Timezone (Continent/City)" error-message="Please enter a timezone offset"></paper-timezone>
+        <p>Timezone</p>
+        <p>Location:[[timezone2.location]]</p>
+        <p>Offset:[[timezone2.offset]]</p>    
+        </paper-material>
+
+          <br>
+        <paper-material class="demo" elevation="1">
+            <paper-material class="demo"  elevation="1">
+                <code>
+                        &lt;paper-timezone label="Timezone (Continent/City)" timezone="{{<span>timezone</span>}}" &gt;
+                        &lt;/paper-timezone&gt;
+                </code>
+            </paper-material>
+        <p>For styling dialog or pointer use selectors to apply styles. For example to change pointer color --paper-timezone-pointer-color can be used. </p>
+        <paper-timezone name="timezone" id="timezone2" timezone="{{timezone2}}" label="Timezone (Continent/City)" error-message="Please enter a timezone offset"></paper-timezone>
+        <p>Timezone</p>
+        <p>Location:[[timezone2.location]]</p>
+        <p>Offset:[[timezone2.offset]]</p>    
+        </paper-material>
+    </template>
+</body>
+<script>
+    (function() {
+      var scope = document.querySelector('#app');
+      document.addEventListener('WebComponentsReady', function() {
+       scope.responsiveWidth='1023px';
+       scope.timezone2={   
+        location:"Pacific/Tarawa",
+        offset:720
+       }; 
+      });
+    })();
+  </script>
+</html>

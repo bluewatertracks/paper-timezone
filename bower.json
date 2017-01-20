@@ -1,0 +1,28 @@
+{
+  "name": "paper-timezone",
+  "authors": [
+    "Blue Water Tracks"
+  ],
+  "description": "Timezone based on user choice",
+  "main": "paper-timezone.html",
+  "keywords": [
+    "webcomponent",
+    "paper-timezone",
+    "timezone-component"
+  ],
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components"
+  ],
+  "dependencies": {
+    "paper-dialog": "^1.1.0",
+    "paper-input": "^1.1.22",
+    "paper-menu": "^1.2.2",
+    "paper-item": "^1.2.1",
+    "moment": "^2.17.1",
+    "mark-down": "robdodson/mark-down#^1.0.0"
+  }
+}

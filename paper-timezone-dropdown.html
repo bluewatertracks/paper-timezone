@@ -1,0 +1,455 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/paper-input/paper-input.html">
+<link rel="import" href="/bower_components/paper-menu/paper-menu.html">
+<link rel="import" href="/bower_components/paper-item/paper-item.html">
+<link rel="import" href="/bower_components/paper-material/paper-material.html">>
+<script type="text/javascript" src="bower_components/moment/min/moment.min.js"></script>
+<script type="text/javascript" src="bower_components/moment-timezone/builds/moment-timezone-with-data.min.js"></script>
+
+<dom-module id="paper-timezone-dropdown">
+
+  <style>
+    :host {
+      display: block;
+      box-sizing: border-box;
+    }
+    paper-material{
+      left:0;
+      right:0;
+      position: absolute;
+      z-index: 10;
+    }
+    paper-item{
+      cursor: pointer;
+    }
+    .iron-selected{
+      background: #E0E0E0;
+    }
+    .timezone{
+      font-family: 'Roboto', 'Noto', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 24px;color: #737373;
+    }
+    .timezone::first-letter{
+      visibility: hidden;
+    }
+    .timezone-with-label{
+      position:absolute;
+      top:12px;
+    }
+    .timezone-without-label{
+      position:absolute;
+      top:-8px;
+    }
+    .tzFormat{
+      right: 10px;
+      position: absolute; 
+    }
+  </style>
+
+  <template>
+   <div style="position:relative;">
+    <paper-input value="{{inputValue}}" timezone="{{timezone}}" on-keyup="_keyup" on-keydown="_keydown"  label="{{placeholder}}"
+      always-float-label="{{alwaysFloatLabel}}"
+      autofocus="{{autofocus}}",
+      char-counter="{{charCounter}}"
+      disabled="{{disabled}}"
+      error-message="{{errorMessage}}"
+      no-label-float="{{noLabelFloat}}"
+      readonly="{{readonly}}"
+      required="{{required}}"
+      auto-validate="{{autoValidate}}"
+    >
+    <div suffix style="cursor:pointer;" id="formatOffset">GMT [[_timezoneFormat(timezone.offset)]]</div>
+    </paper-input>
+
+    <template is="dom-if" if="{{suggestions.length}}">
+    <paper-material >
+    <paper-menu on-iron-select="_itemSelect">
+      <template is="dom-repeat" items="{{suggestions}}">
+          <paper-item on-mouseover="_selection" on-tap="_select">
+           <span>{{item}}</span>
+           <span id="gmtFormat" class="tzFormat">GMT {{_getTimezoneFormat(item)}}</span>
+          </paper-item>
+      </template>
+    </paper-menu>
+    </paper-material>
+
+   </template>
+  </div>
+  </template>
+
+</dom-module>
+
+<script>
+
+  Polymer({
+
+    is: 'paper-timezone-dropdown',
+    properties: {
+
+      /**
+       * The label that will show up as the label for tags input. It not specified, no label will show up.
+       */
+      label:{
+        type:String,
+        value:''
+      },
+      /**
+       * The placeholder for the paper-input element.
+       */
+      placeholder:{
+        type:String,
+        value:'Please enter values here'
+      },
+      /**
+       * The candidates from local variable.
+       */
+      localCandidates:{
+        type:Array,
+        value:moment.tz.names()
+      },
+      _prefetchedCandidates:{
+        type:Array,
+        value:[]
+      },
+      /**
+       * Internal variable holding all matched suggestions.
+       */
+      suggestions:{
+        type:Array,
+        readOnly:true,
+        value:[]
+      },
+      /**
+       * Internal variable holding all matched suggestions.
+       */
+      _timezone:{
+        type:String,
+        value:""
+      },
+      /**
+       * Maximum number of suggestions to show up in timezone.
+       */
+      maxSuggestions:{
+        type:Number,
+        value:5
+      },
+       /**
+       * Input value.
+       */
+      inputValue:{
+        type:String,
+        notify:true
+      },
+
+      /**
+       * Input object.
+       */
+      inputObject:{
+        type:Object,
+        notify:true
+      },
+      /**
+       * Bind this to the <paper-input>'s alwaysFloatLabel property.
+       */
+      alwaysFloatLabel:Boolean,
+      /**
+       * Bind this to the <paper-input>'s autofocus property.
+       */
+      autofocus:Boolean,
+      /**
+       * Bind this to the <paper-input>'s charCounter property.
+       */
+      charCounter:Boolean,
+      /**
+       * Bind this to the <paper-input>'s disabled property.
+       */
+      disabled:Boolean,
+      /**
+       * Bind this to the <paper-input>'s errorMessage property.
+       */
+      errorMessage:String,
+      /**
+       * Bind this to the <paper-input>'s maxlength property.
+       */
+      noLabelFloat:{
+        type:Boolean,
+        value:false
+      },
+      /**
+       * Bind this to the <paper-input>'s readonly property.
+       */
+      readonly:Boolean,
+      /**
+       * Bind this to the <paper-input>'s required property.
+       */
+      required:Boolean,
+      /**
+       * Bind this to the <paper-input>'s autoValidate property.
+       */
+      autoValidate:Boolean,
+      tzFormat:String,
+      timezone:{
+        type:Object,
+      }
+    },
+     
+    /**
+     * Focus on the paper-input element inside of paper-timezone-dropdown.
+     */
+    focus: function() {
+      var input = Polymer.dom(this.root).querySelector('paper-input');
+      input.focus();
+    },
+    _getTimezoneClasses:function(noLabelFloat){
+      if (noLabelFloat && typeof(noLabelFloat) != 'undefined' && noLabelFloat == true) {
+        return "timezone-without-label";
+      }
+      return "timezone-with-label";
+    },
+    _itemSelect:function(e, detail){
+      this.fire('pt-item-select',detail);
+    },
+    // Element Behavior
+    /**
+     * Callback for keydown event
+     *
+     * @param {e} event
+     */
+    _keydown: function(e) {
+      if (e.which == 40 || e.which == 38){
+          e.preventDefault();
+      }
+      else if (e.which == 9) {
+         //tab key
+        if (this._timezone && typeof(this._timezone)!= 'undefined' && this._timezone != ''){
+          e.preventDefault();
+          if (this.isCandidatesJson == true){
+            //if a timezone is available it's always the first element of the candidates
+            this.inputObject = this.suggestions[0];
+            this.inputValue = this._getDisplayValue(this.inputObject);
+          }
+          else{
+            this.inputValue = this._timezone;
+          }
+          var suggestionsMenu = Polymer.dom(this.root).querySelector('paper-menu');
+          var selectedItem = suggestionsMenu[0];
+          this._setSuggestions([]);
+          this.fire('pt-item-confirmed',selectedItem);
+          this._timezone = "";
+        }
+      }else if (e.which == 8) {
+        this.$.formatOffset.innerHTML=" ";
+      }
+    },
+    /**
+     * Callback on mouseover event on paper-item
+     *
+     */
+    _selection:function(e){
+      var suggestionsMenu = Polymer.dom(this.root).querySelector('paper-menu');
+      if (suggestionsMenu && typeof(suggestionsMenu) != 'undefined'){
+        var selectedItem = e.currentTarget;
+        index = Number(suggestionsMenu.indexOf(selectedItem));
+        suggestionsMenu.select(index);
+        var input = Polymer.dom(this.root).querySelector('paper-input');
+        input.focus();
+      }
+      else{
+        console.log("suggestionsMenu not defined");
+      }
+    },
+    /**
+     * Return inputValue
+     * @return {[type]} [description]
+     */
+    _getInputValue: function() {
+      if (this.inputValue && typeof(this.inputValue) != 'undefined'){
+        // this.$.tzFormat.innerHtml = this._getTimezoneFormat(this.inputValue); 
+        return this.inputValue.trim();
+      }
+      return "";
+    },
+    /**
+     * Callback on click event on paper-item
+     */
+    _select: function(e) {
+      var suggestionsMenu = Polymer.dom(this.root).querySelector('paper-menu');
+      if (suggestionsMenu && typeof(suggestionsMenu) != 'undefined'){
+        var selectedItem = e.currentTarget;
+        index = Number(suggestionsMenu.indexOf(selectedItem));
+
+        if (this.isCandidatesJson == true){
+          this.inputObject = this.suggestions[index];
+          this.inputValue = this._getDisplayValue(this.inputObject);
+          var offset = moment(new Date()).tz(this.inputValue).utcOffset();
+          this.formatOffset = this.timezoneFormat(offset);
+        }
+        else{
+          this.inputValue = this.suggestions[index];
+          var loc = this.inputValue;
+          var offset = moment(new Date()).tz(loc).utcOffset();
+              this.timezone={
+                location:this.inputValue,
+                offset:offset
+              };
+              this.domHost.timezone = this.timezone;
+        }
+
+        this._setSuggestions([]);
+        this.fire('pt-item-confirmed',e.target);
+        this._timezone = "";
+        e.stopPropagation();
+      }
+      else{
+        console.log("suggestionsMenu not defined");
+      }
+    },
+    /**
+     * Callback for keyup event
+     *
+     * @param {e} event
+     */
+    _keyup: function(e) {
+      if (e.which == 40){
+        //down button
+        var suggestionsMenu = Polymer.dom(this.root).querySelector('paper-menu');
+        var selectedItem = suggestionsMenu.focusedItem;
+        var index = 0;
+        if (typeof(selectedItem) != 'undefined'){
+          index = Number(suggestionsMenu.indexOf(selectedItem));
+          index = Math.min(index + 1, this.suggestions.length - 1);
+        }
+        suggestionsMenu.select(index);
+        var input = Polymer.dom(this.root).querySelector('paper-input');
+        input.focus();
+      }
+      else if (e.which == 38){
+        //up
+        var suggestionsMenu = Polymer.dom(this.root).querySelector('paper-menu');
+        var selectedItem = suggestionsMenu.focusedItem;
+        if (typeof(selectedItem) != 'undefined'){
+          index = Number(suggestionsMenu.indexOf(selectedItem));
+          index = Math.max(index - 1, -1);
+          suggestionsMenu.select(index);
+        }
+        var input = Polymer.dom(this.root).querySelector('paper-input');
+        input.focus();
+      }
+      else if (e.which == 13){
+        var suggestionsMenu = Polymer.dom(this.root).querySelector('paper-menu');
+        if (suggestionsMenu && typeof(suggestionsMenu) != 'undefined'){
+          var selectedItem = suggestionsMenu.focusedItem;
+          if (typeof(selectedItem) != 'undefined'){
+            index = Number(suggestionsMenu.indexOf(selectedItem));
+            this.inputValue = this.suggestions[index];
+            var loc = this.inputValue;
+            var offset = moment(new Date()).tz(loc).utcOffset();
+            this.timezone={
+              location:this.inputValue,
+              offset:offset
+            };
+            this.domHost.timezone = this.timezone;
+            this._setSuggestions([]);
+            this.fire('pt-item-confirmed',selectedItem);
+            this._timezone = "";
+          }
+        }
+      }
+      else if (e.which == 9){
+        //prevent fire search for tab key
+      }
+      else{
+        var suggestionsMenu = Polymer.dom(this.root).querySelector('paper-menu');
+        if (suggestionsMenu && typeof(suggestionsMenu) != 'undefined'){
+          suggestionsMenu.select(-1);
+        }
+        this._search(this.inputValue.trim());
+      }
+    },
+    _getDisplayValue:function(item){
+      if (this.displayProp && typeof(this.displayProp) != 'undefined'){
+        return item[this.displayProp];
+      }
+      else{
+        console.log("bw-timezone-dropdown: displayProp not set up");
+        return "";
+      }
+    },
+    _getTestCandidate:function(item){
+      if (this.isCandidatesJson == true){
+        var toTest = [];
+        for (var i = 0; i < this.searchableProps.length; i ++){
+          if (item[this.searchableProps[i]] != "undefined"){
+            toTest.push(item[this.searchableProps[i]]);
+          }
+        }
+        return toTest;
+      }
+      else{
+        return [item];
+      }
+    },
+    _search:function(term){
+      if (term == ""){
+        this._setSuggestions([]);
+        return;
+      }
+      var patt =  new RegExp(term.toLowerCase());
+      var matched = [];
+
+      if (typeof(this.localCandidates) != 'undefined'){
+        for (var i = 0; i < this.localCandidates.length; i ++){
+          if (matched.length == this.maxSuggestions){
+            break;
+          }
+          var toTest = this._getTestCandidate(this.localCandidates[i]);
+          for (var j = 0; j < toTest.length; j ++){
+            var item = toTest[j];
+            if (patt.test(item.toLowerCase()) == true){
+              matched.push(this.localCandidates[i]);
+              break;
+            }
+          }
+        }
+      }
+      if (typeof(this._prefetchedCandidates) != 'undefined'){
+        for (var i = 0; i < this._prefetchedCandidates.length; i ++){
+          if (matched.length == this.maxSuggestions){
+            break;
+          }
+          var toTest = this._getTestCandidate(this._prefetchedCandidates[i]);
+          for (var j = 0; j < toTest.length; j ++){
+            var item = toTest[j];
+            if (patt.test(item.toLowerCase()) == true){
+              matched.push(this._prefetchedCandidates[i]);
+              break;
+            }
+          }
+        }
+      }
+      this._setSuggestions(matched);
+    },//_search
+
+    _getTimezoneFormat:function(item){
+        if(item){             
+            var offset = moment(new Date()).tz(item).utcOffset();
+            this.tzFormat = this._timezoneFormat(offset);
+            return this.tzFormat;
+        } 
+    },
+    _timezoneFormat : function(val){
+        var timezone =Math.abs(val);
+        var operator=val >=0 ? '+' : '-';
+        var hours = timezone/60;
+        var rem = timezone%60;
+        if(rem<=0) hours = hours + '.0';
+        timezone = operator+hours;
+        return timezone;
+    }
+  });
+
+</script>
