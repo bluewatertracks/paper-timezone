@@ -17,7 +17,7 @@ The label that will show up as the label for tags input. It not specified, defua
 
 
 It can also displayed as dropdown in mobile view. It takes responsiveWidth attribute to change from dialog view to dropdown view.
-By defualt the responsive-width value is set to 767px,
+By defualt the responsive-width value is set to 768px,
 
 
     <paper-timezone name="timezone" timezone="[[timezone]]" responsive-width="[[responsiveWidth]]" label="Timezone (Continent/City)" error-message="Please enter a timezone offset"></paper-timezone>
@@ -220,7 +220,7 @@ If you want to save it in bower.json file, remember to add flag --save
                  */
                 responsiveWidth: {
                     type: String,
-                    value: '767px',
+                    value: '768px',
                     notify:true
                 },
                 _centers: {
@@ -232,11 +232,12 @@ If you want to save it in bower.json file, remember to add flag --save
                     type:String
                 },
                 /**
-                 *Format type can be type of offset can be showed in minutes or hours format      
+                 *Format type can be type of offset can be showed in minutes or hours format.
+                 *By defualt value is hours      
                  */
                 formatType:{
                     type:String,
-                    value:"minutes"
+                    value:"hours"
                 },
                 _timezoneFormatVal:{
                     type:String
@@ -325,8 +326,7 @@ If you want to save it in bower.json file, remember to add flag --save
                } 
             },
             _timezoneFormat : function(val){
-                if(this.formatType=="minutes") return val;
-                else{
+                if(this.formatType=="hours"){
                 var timezone =Math.abs(val);
                 var operator=val >=0 ? '+' : '-';
                 var hours = timezone/60;
@@ -334,6 +334,8 @@ If you want to save it in bower.json file, remember to add flag --save
                 if(rem<=0) hours = hours + '.0';
                 timezone = operator+hours;
                 return timezone;
+                }else{
+                    return val;
                 }
             },
             _dataChange : function(data){
@@ -343,7 +345,6 @@ If you want to save it in bower.json file, remember to add flag --save
                 this._timezones = e.detail.response;
                 this._generateZones();
             }
-           
         });
     })();
     </script>
