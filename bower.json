@@ -1,9 +1,12 @@
 {
   "name": "paper-timezone",
   "authors": [
-    "Blue Water Tracks"
+    "Bhargav Konkathi",
+    "Raju Maisnam",
+    "Dmytro Hrytsenko",
+    "Blue Water Tracks Team"
   ],
-  "description": "Timezone based on user choice",
+  "description": "Timezone offset and location based on user choice",
   "main": "paper-timezone.html",
   "keywords": [
     "webcomponent",
