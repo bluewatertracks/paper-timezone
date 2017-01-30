@@ -1,10 +1,10 @@
-<link rel="import" href="/bower_components/paper-input/paper-input.html">
-<link rel="import" href="/bower_components/paper-dialog/paper-dialog.html">
-<link rel="import" href="/bower_components/iron-ajax/iron-ajax.html">
-<link rel="import" href="/bower_components/iron-media-query/iron-media-query.html">
-<script type="text/javascript" src="bower_components/moment/min/moment.min.js"></script>
+<link rel="import" href="../paper-input/paper-input.html">
+<link rel="import" href="../paper-dialog/paper-dialog.html">
+<link rel="import" href="../iron-ajax/iron-ajax.html">
+<link rel="import" href="../iron-media-query/iron-media-query.html">
+<script type="text/javascript" src="../moment/min/moment.min.js"></script>
 <script type="text/javascript" src="center.js"></script>
-<script type="text/javascript" src="bower_components/moment-timezone/builds/moment-timezone-with-data.min.js"></script>
+<script type="text/javascript" src="../moment-timezone/builds/moment-timezone-with-data.min.js"></script>
 <link rel="import" href="paper-timezone-dropdown.html">
 
 
@@ -152,7 +152,7 @@ If you want to save it in bower.json file, remember to add flag --save
 
             </style>
         </custom-style>
-    <iron-ajax auto url="/bower_components/moment-timezone/data/meta/latest.json" handle-as="json" on-response="_handleResponse"></iron-ajax>
+    <iron-ajax auto url="/../moment-timezone/data/meta/latest.json" handle-as="json" on-response="_handleResponse"></iron-ajax>
     <iron-media-query query="(max-width:[[responsiveWidth]])" query-matches="{{_smallScreen}}"  ></iron-media-query>
     <div id="dialogView" hidden$="[[_smallScreen]]" >
         <paper-input  label="[[label]]" id="input" readonly value="[[timezone.location]]" auto-validate="true" error-message="[[errorMessage]]" required="true" on-tap="_openDialog">
