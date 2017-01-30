@@ -323,13 +323,10 @@ If you want to save it in bower.json file, remember to add flag --save
                  key: "Asia/Calcutta",
                  value: "Asia/Kolkata"
                }];
-
                var locExists = lookup.findIndex(function(location) {
                  return location.key == loc;
                });
-
-               if(locExists > -1) loc = looks[locExists]['value'];
-
+               if(locExists > -1) loc = lookup[locExists]['value'];
                var selector = ".map #inset span[name='"+loc+"']";
                var span=this.$$(selector);
                if(span){
@@ -345,8 +342,6 @@ If you want to save it in bower.json file, remember to add flag --save
                         location:loc,
                         offset:offset
                     };
-
-                    console.log(this.timezone);
                }
             },
             _timezoneFormat : function(val){
