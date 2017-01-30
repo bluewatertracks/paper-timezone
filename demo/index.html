@@ -58,14 +58,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     }
   </style>
-  <h3>Default timezone example</h3>
+  <h4>
+    Default timezone example. Here timezone property is a object which has two properties they are location and offset in minutes.
+  </h4>
   <demo-snippet>
     <template is="dom-bind" id="app">
       <paper-timezone timezone="[[timezone]]" label="Timezone (Continent/City)"
         error-message="Please enter a timezone offset"></paper-timezone>
     </template>
   </demo-snippet>
-  <h3>Dialog can be styled using custom properties.</h3>
+  <h4>Dialog can be styled using below custom properties to change dialog background color or pointer color etc.</h4>
   <demo-snippet>
     
     <template>
@@ -81,14 +83,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <paper-timezone id="timezone" label="Timezone (Continent/City)" error-message="Please enter a timezone offset"></paper-timezone>
     </template>
   </demo-snippet>
-  <h3> Timezone with format-type minutes format </h3>
+  <h4> Timezone with format-time in minutes.Format-type is a property which is used for dislpaying timezone offset as a suffix either in hours or minutes.
+    By default it is displayed in hours format. For example if offset is +330 minutes then it is in hours format +5.5 and in minutes format 330.</h4>
   <demo-snippet>
     <template>
       <paper-timezone format-type="minutes" label="Timezone (Continent/City)"
         error-message="Please enter a timezone offset"></paper-timezone>
     </template>
   </demo-snippet>
-   <h3> Timezone with responsive-width.If the responsive width matches then it can be displayed as dropdown with search functionality</h3>
+   <h4> Timezone with responsive-width which is property responsible for changing the view depending on the browser width. If browser width matches or less than responsive width then paper-timezone will be displayed as dropdown with search functionality.</h4>
   <demo-snippet>
     <template>
       <paper-timezone responsive-width="1024px" label="Timezone (Continent/City)"

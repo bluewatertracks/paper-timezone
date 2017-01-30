@@ -152,7 +152,7 @@ If you want to save it in bower.json file, remember to add flag --save
 
             </style>
         </custom-style>
-    <iron-ajax auto url="/../moment-timezone/data/meta/latest.json" handle-as="json" on-response="_handleResponse"></iron-ajax>
+    <iron-ajax auto url="../moment-timezone/data/meta/latest.json" handle-as="json" on-response="_handleResponse"></iron-ajax>
     <iron-media-query query="(max-width:[[responsiveWidth]])" query-matches="{{_smallScreen}}"  ></iron-media-query>
     <div id="dialogView" hidden$="[[_smallScreen]]" >
         <paper-input  label="[[label]]" id="input" readonly value="[[timezone.location]]" auto-validate="true" error-message="[[errorMessage]]" required="true" on-tap="_openDialog">
