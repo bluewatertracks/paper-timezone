@@ -70,10 +70,10 @@
         <div suffix style="cursor:pointer;" id="formatOffset">GMT [[_timezoneOffsetFormat(timezone.offset)]]</div>
       </paper-input>
 
-      <template is="dom-if" if="[[suggestions.length]]">
+      <template is="dom-if" if="[[_suggestions.length]]">
         <paper-material>
           <paper-menu>
-            <template is="dom-repeat" items="[[suggestions]]">
+            <template is="dom-repeat" items="[[_suggestions]]">
               <paper-item on-mouseover="_mouseMoveAction" on-tap="_selectItem">
                 <span>[[item]]</span>
                 <span id="gmtFormat" class="tzFormat">GMT [[_getTimezoneOffsetFormat(item)]]</span>
@@ -119,7 +119,7 @@
       /**
        * Internal variable holding all matched suggestions.
        */
-      suggestions: {
+      _suggestions: {
         type: Array
       },
 
@@ -226,7 +226,7 @@
     _keydown: function(e) {
       switch(e.keyCode) {
         case 8: this.$.formatOffset.innerHTML=" "; break;
-        case 9: this.set('suggestions', []); break;
+        case 9: this.set('_suggestions', []); break;
         case 38: e.preventDefault(); break;
         case 40: e.preventDefault();
       }
@@ -287,7 +287,7 @@
       var selectedItem = menuList.focusedItem, index = 0;
       if (selectedItem) {
         index = Number(menuList.indexOf(selectedItem));
-        index = Math.min(index + 1, this.suggestions.length - 1);
+        index = Math.min(index + 1, this._suggestions.length - 1);
       }
       menuList.select(index);
       this._focusOnInput();
@@ -295,13 +295,13 @@
     _selectMenuItem: function(menuList, selectedItem) {
       if (selectedItem) {
         var index = Number(menuList.indexOf(selectedItem));
-        var location = this.inputValue = this.suggestions[index];;
+        var location = this.inputValue = this._suggestions[index];;
         var offset = moment(new Date()).tz(location).utcOffset();
         this.timezone = {
           location: location,
           offset: offset
         };
-        this.set('suggestions', []);
+        this.set('_suggestions', []);
       }
     },
     _getDisplayValue: function(item) {
@@ -315,7 +315,7 @@
     },
     _search: function(term) {
       if (term == "") {
-        this.set('suggestions', []);
+        this.set('_suggestions', []);
         return;
       }
       var pattern = new RegExp(term.toLowerCase()), matched = [];
@@ -331,7 +331,7 @@
           }
         }
       }
-      this.set('suggestions', matched);
+      this.set('_suggestions', matched);
     },
 
     _getTimezoneOffsetFormat:function(item){
