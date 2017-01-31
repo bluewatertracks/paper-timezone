@@ -212,6 +212,14 @@ If you want to save it in bower.json file, remember to add flag --save
                     type: Array,
                 },
                 /**
+                 *Format type can be type of offset can be showed in minutes or hours format.
+                 *By defualt value is hours
+                 */
+                formatType:{
+                    type:String,
+                    value:"hours"
+                },
+                /**
                 *Timezone property has location and offset in minutes. By defualt it will guess the timezone using
                 * moment.guess().
                 */
@@ -240,14 +248,6 @@ If you want to save it in bower.json file, remember to add flag --save
                 },
                 _backUpTimezone:{
                     type:String
-                },
-                /**
-                 *Format type can be type of offset can be showed in minutes or hours format.
-                 *By defualt value is hours
-                 */
-                formatType:{
-                    type:String,
-                    value:"hours"
                 },
                 _timezoneFormatVal:{
                     type:String
@@ -352,7 +352,7 @@ If you want to save it in bower.json file, remember to add flag --save
                 var rem = timezone%60;
                 if(rem<=0) hours = hours + '.0';
                 timezone = operator+hours;
-                return timezone;
+                    return timezone;
                 }else{
                     return val;
                 }
