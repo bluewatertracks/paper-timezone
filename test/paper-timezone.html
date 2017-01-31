@@ -172,8 +172,8 @@
           var dropdownInput = dropdownModeFixture.$.dropdown.querySelector('paper-input');
           dropdownInput.value = 'abcd';
           dropdownInput.addEventListener('keyup', function() {
-              assert.isArray(dropdownModeFixture.$.dropdown.suggestions);
-              assert.equal(dropdownModeFixture.$.dropdown.suggestions.length, 0);
+              assert.isArray(dropdownModeFixture.$.dropdown._suggestions);
+              assert.equal(dropdownModeFixture.$.dropdown._suggestions.length, 0);
               done();
           });
           MockInteractions.focus(dropdownInput);
@@ -184,8 +184,8 @@
           var dropdownInput = dropdownModeFixture.$.dropdown.querySelector('paper-input');
           dropdownInput.value = 'a';
           dropdownInput.addEventListener('keyup', function() {
-              assert.isArray(dropdownModeFixture.$.dropdown.suggestions);
-              assert.equal(dropdownModeFixture.$.dropdown.suggestions.length, 5);
+              assert.isArray(dropdownModeFixture.$.dropdown._suggestions);
+              assert.equal(dropdownModeFixture.$.dropdown._suggestions.length, 5);
               done();
           });
           MockInteractions.focus(dropdownInput);
