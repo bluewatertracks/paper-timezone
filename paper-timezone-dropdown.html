@@ -5,90 +5,83 @@
 <link rel="import" href="../paper-material/paper-material.html">>
 <script type="text/javascript" src="../moment/min/moment.min.js"></script>
 <script type="text/javascript" src="../moment-timezone/builds/moment-timezone-with-data.min.js"></script>
-
 <dom-module id="paper-timezone-dropdown">
   <template>
     <style>
-      :host {
+       :host {
         display: block;
         box-sizing: border-box;
       }
+      
       .container {
         position: relative;
       }
+      
       paper-material {
         left: 0;
         right: 0;
         position: absolute;
         z-index: 10;
       }
-      paper-item{
+      
+      paper-item {
         cursor: pointer;
       }
-      .iron-selected{
+      
+      .iron-selected {
         background: #E0E0E0;
       }
-      .timezone{
+      
+      .timezone {
         font-family: 'Roboto', 'Noto', sans-serif;
         -webkit-font-smoothing: antialiased;
         font-size: 16px;
         font-weight: 400;
-        line-height: 24px;color: #737373;
+        line-height: 24px;
+        color: #737373;
       }
-      .timezone::first-letter{
+      
+      .timezone::first-letter {
         visibility: hidden;
       }
-      .timezone-with-label{
+      
+      .timezone-with-label {
         position: absolute;
         top: 12px;
       }
-      .timezone-without-label{
+      
+      .timezone-without-label {
         position: absolute;
         top: -8px;
       }
-      .tzFormat{
+      
+      .tzFormat {
         right: 10px;
-        position: absolute; 
+        position: absolute;
       }
     </style>
     <div class="container">
-      <paper-input 
-        value="{{inputValue}}" 
-        on-keyup="_keyup" 
-        on-keydown="_keydown"  
-        label="[[label]]"
-        placeholder="[[placeholder]]"
-        always-float-label="[[alwaysFloatLabel]]"
-        autofocus="[[autofocus]]"
-        disabled="[[disabled]]"
-        error-message="[[errorMessage]]"
-        no-label-float="[[noLabelFloat]]"
-        readonly="[[readonly]]"
-        required="[[required]]"
-        auto-validate="[[autoValidate]]"
-      >
+      <paper-input value="{{inputValue}}" on-keyup="_keyup" on-keydown="_keydown" label="[[label]]" placeholder="[[placeholder]]"
+        always-float-label="[[alwaysFloatLabel]]" autofocus="[[autofocus]]" disabled="[[disabled]]" error-message="[[errorMessage]]"
+        no-label-float="[[noLabelFloat]]" readonly="[[readonly]]" required="[[required]]" auto-validate="[[autoValidate]]">
         <div suffix style="cursor:pointer;" id="formatOffset">GMT [[_timezoneOffsetFormat(timezone.offset)]]</div>
-      </paper-input>
-
-      <template is="dom-if" if="[[_suggestions.length]]">
-        <paper-material>
-          <paper-menu>
-            <template is="dom-repeat" items="[[_suggestions]]">
-              <paper-item on-mouseover="_mouseMoveAction" on-tap="_selectItem">
-                <span>[[item]]</span>
-                <span id="gmtFormat" class="tzFormat">GMT [[_getTimezoneOffsetFormat(item)]]</span>
-              </paper-item>
-            </template>
-          </paper-menu>
-        </paper-material>
-      </template>
+        </paper-input>
+        <template is="dom-if" if="[[_suggestions.length]]">
+          <paper-material>
+            <paper-menu>
+              <template is="dom-repeat" items="[[_suggestions]]">
+                <paper-item on-mouseover="_mouseMoveAction" on-tap="_selectItem">
+                  <span>[[item]]</span>
+                  <span id="gmtFormat" class="tzFormat">GMT [[_getTimezoneOffsetFormat(item)]]</span>
+                </paper-item>
+              </template>
+            </paper-menu>
+          </paper-material>
+        </template>
     </div>
   </template>
-
 </dom-module>
-
 <script>
-
   Polymer({
 
     is: 'paper-timezone-dropdown',
@@ -126,7 +119,7 @@
       /**
        * Maximum number of suggestions to show up in timezone.
        */
-      maxSuggestions:{
+      maxSuggestions: {
         type: Number,
         value: 5
       },
@@ -153,7 +146,7 @@
         type: Boolean,
         value: false
       },
-     
+
       /**
        * Set to true to disable paper-countries.
        */
@@ -182,7 +175,7 @@
        */
       readonly: {
         type: Boolean,
-        value: false 
+        value: false
       },
 
       /**
@@ -209,11 +202,11 @@
         notify: true
       }
     },
-     
+
     /**
      * Focus on the paper-input element inside of paper-timezone-dropdown.
      */
-    _focusOnInput: function() {
+    _focusOnInput: function () {
       var input = Polymer.dom(this.root).querySelector('paper-input');
       input.focus();
     },
@@ -223,39 +216,54 @@
      *
      * @param {e} event
      */
-    _keydown: function(e) {
-      switch(e.keyCode) {
-        case 8: this.$.formatOffset.innerHTML=" "; break;
-        case 9: this.set('_suggestions', []); break;
-        case 38: e.preventDefault(); break;
-        case 40: e.preventDefault();
+    _keydown: function (e) {
+      switch (e.keyCode) {
+        case 8:
+          this.$.formatOffset.innerHTML = " ";
+          break;
+        case 9:
+          this.set('_suggestions', []);
+          break;
+        case 38:
+          e.preventDefault();
+          break;
+        case 40:
+          e.preventDefault();
       }
     },
-     /**
+    /**
      * Callback for keyup event
      *
      * @param {e} event
      */
-    _keyup: function(e) {
+    _keyup: function (e) {
       var suggestionsMenu = Polymer.dom(this.root).querySelector('paper-menu');
       if (suggestionsMenu) {
-        switch(e.keyCode) {
-          case 9: e.preventDefault(); return;
-          case 13: this._selectMenuItem(suggestionsMenu, suggestionsMenu.focusedItem); return;
-          case 38: this._upButtonAction(suggestionsMenu); return;
-          case 40: this._downButtonAction(suggestionsMenu); return;
+        switch (e.keyCode) {
+          case 9:
+            e.preventDefault();
+            return;
+          case 13:
+            this._selectMenuItem(suggestionsMenu, suggestionsMenu.focusedItem);
+            return;
+          case 38:
+            this._upButtonAction(suggestionsMenu);
+            return;
+          case 40:
+            this._downButtonAction(suggestionsMenu);
+            return;
         }
         suggestionsMenu.select(-1);
       }
       this._search(this.inputValue.trim());
     },
-   /**
+    /**
      * Callback on mouseover event on paper-item
      *
      */
-    _mouseMoveAction: function(e){
+    _mouseMoveAction: function (e) {
       var suggestionsMenu = Polymer.dom(this.root).querySelector('paper-menu');
-      if (suggestionsMenu){
+      if (suggestionsMenu) {
         var selectedItem = e.currentTarget;
         var index = Number(suggestionsMenu.indexOf(selectedItem));
         suggestionsMenu.select(index);
@@ -267,15 +275,16 @@
      *
      * @param {e} event
      */
-    _selectItem: function(e) {
+    _selectItem: function (e) {
       var suggestionsMenu = Polymer.dom(this.root).querySelector('paper-menu');
       if (suggestionsMenu) {
         var selectedItem = e.currentTarget;
         this._selectMenuItem(suggestionsMenu, selectedItem);
       }
     },
-    _upButtonAction: function(menuList) {
-      var selectedItem = menuList.focusedItem, index = 0;
+    _upButtonAction: function (menuList) {
+      var selectedItem = menuList.focusedItem,
+        index = 0;
       if (selectedItem) {
         index = Number(menuList.indexOf(selectedItem));
         index = Math.max(index - 1, -1);
@@ -283,8 +292,9 @@
       menuList.select(index);
       this._focusOnInput();
     },
-    _downButtonAction: function(menuList) {
-      var selectedItem = menuList.focusedItem, index = 0;
+    _downButtonAction: function (menuList) {
+      var selectedItem = menuList.focusedItem,
+        index = 0;
       if (selectedItem) {
         index = Number(menuList.indexOf(selectedItem));
         index = Math.min(index + 1, this._suggestions.length - 1);
@@ -292,7 +302,7 @@
       menuList.select(index);
       this._focusOnInput();
     },
-    _selectMenuItem: function(menuList, selectedItem) {
+    _selectMenuItem: function (menuList, selectedItem) {
       if (selectedItem) {
         var index = Number(menuList.indexOf(selectedItem));
         var location = this.inputValue = this._suggestions[index];;
@@ -304,52 +314,51 @@
         this.set('_suggestions', []);
       }
     },
-    _getDisplayValue: function(item) {
-      if (this.displayProp){
+    _getDisplayValue: function (item) {
+      if (this.displayProp) {
         return item[this.displayProp];
-      }
-      else {
+      } else {
         console.warn("displayProp not set up");
         return "";
       }
     },
-    _search: function(term) {
+    _search: function (term) {
       if (term == "") {
         this.set('_suggestions', []);
         return;
       }
-      var pattern = new RegExp(term.toLowerCase()), matched = [];
+      var pattern = new RegExp(term.toLowerCase()),
+        matched = [];
       if (this.localCandidates) {
-        for (var i = 0; i < this.localCandidates.length; i ++){
-          if (matched.length == this.maxSuggestions){
+        for (var i = 0; i < this.localCandidates.length; i++) {
+          if (matched.length == this.maxSuggestions) {
             break;
           }
           var location = this.localCandidates[i];
-          if (pattern.test(location.toLowerCase())){
-              matched.push(location);
-              continue;
+          if (pattern.test(location.toLowerCase())) {
+            matched.push(location);
+            continue;
           }
         }
       }
       this.set('_suggestions', matched);
     },
 
-    _getTimezoneOffsetFormat:function(item){
-      if(item){             
+    _getTimezoneOffsetFormat: function (item) {
+      if (item) {
         var offset = moment(new Date()).tz(item).utcOffset();
         var offsetFormatted = this._timezoneOffsetFormat(offset);
         return offsetFormatted;
-      } 
+      }
     },
-    _timezoneOffsetFormat : function(offset){
+    _timezoneOffsetFormat: function (offset) {
       var timezoneOffset = Math.abs(offset);
-      var operator= offset >=0 ? '+' : '-';
-      var hours = timezoneOffset/60;
-      var rem = timezoneOffset%60;
-      if(rem<=0) hours = hours + '.0';
+      var operator = offset >= 0 ? '+' : '-';
+      var hours = timezoneOffset / 60;
+      var rem = timezoneOffset % 60;
+      if (rem <= 0) hours = hours + '.0';
       timezoneOffset = operator + hours;
       return timezoneOffset;
     }
   });
-
 </script>
