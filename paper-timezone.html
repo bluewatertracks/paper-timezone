@@ -4,6 +4,7 @@
 <link rel="import" href="../iron-media-query/iron-media-query.html">
 <script type="text/javascript" src="../moment/min/moment.min.js"></script>
 <script type="text/javascript" src="center.js"></script>
+<script type="text/javascript" src="/src/links.js"></script>
 <script type="text/javascript" src="../moment-timezone/builds/moment-timezone-with-data.min.js"></script>
 <link rel="import" href="paper-timezone-dropdown.html">
 
@@ -163,6 +164,7 @@ If you want to save it in bower.json file, remember to add flag --save
             </style>
         </custom-style>
     <iron-ajax auto url="../moment-timezone/data/meta/latest.json" handle-as="json" on-response="_handleResponse"></iron-ajax>
+    <!--<iron-ajax auto url="../moment-timezone/data/packed/latest.json" handle-as="json" on-response="_handleResponseLinks"></iron-ajax>-->
     <iron-media-query query="(max-width:[[responsiveWidth]])" query-matches="{{_smallScreen}}"  ></iron-media-query>
     <div id="dialogView" hidden$="[[_smallScreen]]" >
         <paper-input  label="[[label]]" id="input" readonly value="[[timezone.location]]" auto-validate="true" error-message="[[errorMessage]]" required="true" on-tap="_openDialog">
@@ -184,7 +186,7 @@ If you want to save it in bower.json file, remember to add flag --save
         </paper-dialog>
     </div>
    <div id="dropdownView" hidden$="[[!_smallScreen]]">
-        <paper-timezone-dropdown   id="dropdown" max-suggestions="5" placeholder="[[label]]" input-value="[[timezone.location]]" timezone="[[timezone]]" auto-validate="true" error-message$="[[errorMessage]]"></paper-timezone-dropdown>
+        <paper-timezone-dropdown   id="dropdown" max-suggestions="5" placeholder="[[label]]" input-value="{{timezone.location}}" timezone="{{timezone}}" auto-validate="true" error-message$="[[errorMessage]]"></paper-timezone-dropdown>
    </div>
   </template>
 
@@ -252,7 +254,12 @@ If you want to save it in bower.json file, remember to add flag --save
                 _timezoneFormatVal:{
                     type:String
                 },
-                _smallScreen:Boolean
+                _smallScreen:Boolean,
+                _links:Array,
+                _lookups:{
+                    type:Array,
+                    value:[]
+                }
             },
             _computetimeAbbr: function(timezone) {
                 var m;
@@ -316,17 +323,12 @@ If you want to save it in bower.json file, remember to add flag --save
                 this._timezoneFormatVal = this._timezoneFormat(this.timezone.offset);
             },
             _setPointer :function(loc){
-               var loc = this.$.input.value || loc;
-              //It so happens that the values that come out of moment and the one on the maps dont match, so in order to fix that, we have added a lookup
-              //that can map the location and show a different name for the same.
-               var lookup = [{
-                 key: "Asia/Calcutta",
-                 value: "Asia/Kolkata"
-               }];
-               var locExists = lookup.findIndex(function(location) {
-                 return location.key == loc;
-               });
-               if(locExists > -1) loc = lookup[locExists]['value'];
+              var loc = this.$.input.value || loc;
+              var locExists=links.find(function(element) {
+                  var locations = element.split('|');
+                  return locations.indexOf(loc)>-1;
+              });
+               if(locExists) loc = locExists.split('|')[0];
                var selector = ".map #inset span[name='"+loc+"']";
                var span=this.$$(selector);
                if(span){
