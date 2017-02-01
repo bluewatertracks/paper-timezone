@@ -61,11 +61,24 @@
       }
     </style>
     <div class="container">
-      <paper-input value="{{inputValue}}" on-keyup="_keyup" on-keydown="_keydown" label="[[label]]" placeholder="[[placeholder]]"
-        always-float-label="[[alwaysFloatLabel]]" autofocus="[[autofocus]]" disabled="[[disabled]]" error-message="[[errorMessage]]"
-        no-label-float="[[noLabelFloat]]" readonly="[[readonly]]" required="[[required]]" auto-validate="[[autoValidate]]">
+      
+      <paper-input 
+        label="[[label]]" 
+        placeholder="[[placeholder]]"
+        always-float-label="[[alwaysFloatLabel]]" 
+        autofocus="[[autofocus]]" 
+        disabled="[[disabled]]" 
+        error-message="[[errorMessage]]"
+        value="{{inputValue}}" 
+        no-label-float="[[noLabelFloat]]" 
+        readonly="[[readonly]]" 
+        required="[[required]]" 
+        auto-validate="[[autoValidate]]"
+        on-keyup="_keyup" 
+        on-keydown="_keydown" >
         <div suffix style="cursor:pointer;" id="formatOffset">GMT [[_timezoneOffsetFormat(timezone.offset)]]</div>
-        </paper-input>
+      </paper-input>
+
         <template is="dom-if" if="[[_suggestions.length]]">
           <paper-material>
             <paper-menu>
@@ -78,6 +91,7 @@
             </paper-menu>
           </paper-material>
         </template>
+        
     </div>
   </template>
 </dom-module>

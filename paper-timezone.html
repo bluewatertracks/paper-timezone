@@ -3,8 +3,8 @@
 <link rel="import" href="../iron-ajax/iron-ajax.html">
 <link rel="import" href="../iron-media-query/iron-media-query.html">
 <script type="text/javascript" src="../moment/min/moment.min.js"></script>
-<script type="text/javascript" src="./center.js"></script>
-<script type="text/javascript" src="./links.js"></script>
+<script type="text/javascript" src="/src/center.js"></script>
+<script type="text/javascript" src="/src/links.js"></script>
 <script type="text/javascript" src="../moment-timezone/builds/moment-timezone-with-data.min.js"></script>
 <link rel="import" href="paper-timezone-dropdown.html">
 <!--
@@ -174,33 +174,60 @@ If you want to save it in bower.json file, remember to add flag --save
                 }
             </style>
         </custom-style>
+        
         <iron-ajax auto url="../moment-timezone/data/meta/latest.json" handle-as="json" on-response="_handleResponse"></iron-ajax>
         <iron-media-query query="(max-width:[[responsiveWidth]])" query-matches="{{_smallScreen}}"></iron-media-query>
+        
         <div id="dialogView" hidden$="[[_smallScreen]]">
-            <paper-input label="[[label]]" id="input" readonly value="[[timezone.location]]" auto-validate="true" error-message="[[errorMessage]]"
-                required="true" on-tap="_openDialog">
+             
+             <paper-input 
+                id="input"
+                label="[[label]]" 
+                disabled="[[disabled]]" 
+                no-label-float="[[noLabelFloat]]" 
+                readonly="[[readonly]]"
+                placeholder="[[placeholder]]" 
+                required="[[required]]" 
+                auto-validate="[[autoValidate]]" 
+                value="{{timezone.location}}"
+                error-message="[[errorMessage]]" 
+                on-tap="_openDialog">
                 <div suffix style="cursor:pointer;">GMT [[_timezoneFormatVal]]</div>
-                </paper-input>
-                <paper-dialog id="dialog" class="dialog" on-iron-overlay-closed="_revertValue" noCancelOnOutsideClick="true">
-                    <div id="map" class="map">
-                        <h4 class="map-label">
-                            <span class="map-label-name" id="loclabel">[[timezone.location]]</span>
-                            <span class="map-label-time" id="offsetlabel"> GMT {{_timezoneFormatVal}} ([[_computetimeAbbr(timezone)]])</span>
-                        </h4>
-                        <div class="map-wrap">
-                            <div id="inset" class="map-inset" on-mousemove="_onMouseMove" on-tap="_mouseClicked">
-                                <div id="axisX" class="map-axis-x"></div>
-                                <div id="axisY" class="map-axis-y"></div>
-                            </div>
+            </paper-input>
+
+            <paper-dialog id="dialog" class="dialog" on-iron-overlay-closed="_revertValue" noCancelOnOutsideClick="true">
+                <div id="map" class="map">
+                    <h4 class="map-label">
+                        <span class="map-label-name" id="loclabel">[[timezone.location]]</span>
+                        <span class="map-label-time" id="offsetlabel"> GMT {{_timezoneFormatVal}} ([[_computetimeAbbr(timezone)]])</span>
+                    </h4>
+                    <div class="map-wrap">
+                        <div id="inset" class="map-inset" on-mousemove="_onMouseMove" on-tap="_mouseClicked">
+                            <div id="axisX" class="map-axis-x"></div>
+                            <div id="axisY" class="map-axis-y"></div>
                         </div>
                     </div>
-                </paper-dialog>
+                </div>
+            </paper-dialog>
+
         </div>
+
         <div id="dropdownView" hidden$="[[!_smallScreen]]">
-            <paper-timezone-dropdown id="dropdown" max-suggestions="5" placeholder="[[label]]" input-value="{{timezone.location}}" timezone="{{timezone}}"
-                auto-validate="true" error-message$="[[errorMessage]]"></paper-timezone-dropdown>
+           <paper-timezone-dropdown 
+                id="dropdown"
+                label="[[label]]" 
+                placeholder="[[placeholder]]" 
+                max-suggestions="[[maxSuggestion]]" 
+                required="[[required]]" 
+                input-value="[[timezone.location]]" 
+                timezone="{{timezone}}" 
+                auto-validate="[[autoValidate]]" 
+                error-message$="[[errorMessage]]">
+            </paper-timezone-dropdown>
         </div>
+
     </template>
+    
     <script>
         (function () {
             'use strict';
@@ -217,25 +244,72 @@ If you want to save it in bower.json file, remember to add flag --save
                         type: String,
                         value: "Timezone(Continent/City)"
                     },
+
                     /**
-                     * Bind this to the <paper-input>'s errorMessage property.
+                    * Set to true to mark the paper-timezone as required.
+                    */
+                    required: {
+                        type: Boolean,
+                        value: false
+                    },
+
+                    /* Set to true to set paper-timezone in readonly mode*/
+                    readonly: {
+                        type: Boolean,
+                        value: true
+                    },
+
+                    /**
+                     * Set to true to auto-validate the input value.
                      */
+                    autoValidate: {
+                        type: Boolean,
+                        value: false
+                    },
+
+                    /**
+                     * Set to true to disable paper-timezone.
+                     */
+                    disabled: {
+                        type: Boolean,
+                        value: false
+                    },
+
+                    /**
+                     * Set to true to disable the floating label.
+                     */
+                    noLabelFloat: {
+                        type: Boolean,
+                        value: false
+                    },
+
+                    placeholder: {
+                        type: String,
+                        value: "Please select timezone."
+                    },
+
+                    /**
+                    * Bind this to the <paper-input>'s errorMessage property.
+                    */
                     errorMessage: String,
+
                     _timezones: {
                         type: Array,
                     },
+
                     /**
-                     *Format type can be type of offset can be showed in minutes or hours format.
-                     *By defualt value is hours
-                     */
+                    *Format type can be type of offset can be showed in minutes or hours format.
+                    *By defualt value is hours
+                    */
                     formatType: {
                         type: String,
                         value: "hours"
                     },
+                    
                     /**
-                     *Timezone property has location and offset in minutes. By defualt it will guess the timezone using
-                     * moment.guess().
-                     */
+                    *Timezone property has location and offset in minutes. By defualt it will guess the timezone using
+                    * moment.guess().
+                    */
                     timezone: {
                         type: Object,
                         value: {
@@ -245,10 +319,11 @@ If you want to save it in bower.json file, remember to add flag --save
                         observer: "_dataChange",
                         notify: true
                     },
+
                     /**
-                     * If the viewport's width is smaller than this value, the paper-timezone will change to dropdown view.
-                     * In this mode dialog will not be displayed instead dropdown is displayed.
-                     */
+                    * If the viewport's width is smaller than this value, the paper-timezone will change to dropdown view.
+                    * In this mode dialog will not be displayed instead dropdown is displayed.
+                    */
                     responsiveWidth: {
                         type: String,
                         value: '768px',
@@ -265,7 +340,15 @@ If you want to save it in bower.json file, remember to add flag --save
                     _timezoneFormatVal: {
                         type: String
                     },
-                    _smallScreen: Boolean
+                    _smallScreen: Boolean,
+                    
+                    /*
+                    * Maximum number of suggestions to show up in timezone dropdown view.
+                    */
+                    maxSuggestion: {
+                        type: Number,
+                        value: 5
+                    }
                 },
                 _computetimeAbbr: function (timezone) {
                     var m;
