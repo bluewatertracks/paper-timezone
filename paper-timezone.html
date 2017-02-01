@@ -3,22 +3,26 @@
 <link rel="import" href="../iron-ajax/iron-ajax.html">
 <link rel="import" href="../iron-media-query/iron-media-query.html">
 <script type="text/javascript" src="../moment/min/moment.min.js"></script>
-<script type="text/javascript" src="center.js"></script>
-<script type="text/javascript" src="/src/links.js"></script>
+<script type="text/javascript" src="./center.js"></script>
+<script type="text/javascript" src="./links.js"></script>
 <script type="text/javascript" src="../moment-timezone/builds/moment-timezone-with-data.min.js"></script>
 <link rel="import" href="paper-timezone-dropdown.html">
 <!--
+  `paper-timezone` is inspired by the worldmap with timezone selection feature on the momentjs website. It is a rewrite of the same in Polymer although
+  with added features.
+
+  To instantiate the default `paper-timezone` component without any fields, we simply declare the `paper-timezone` tags.
       <paper-timezone></paper-timezone>
-  The default `paper-timezone` component without any fields.
 
+  The default `label` is `Timezone(Continent/City)` which can be replaced like in the example below.
       <paper-timezone label="Please select a timezone"></paper-timezone>
-  The default `label` is `Timezone(Continent/City)` which can be replaced like in the example above.
 
-      <paper-timezone label="Please select a timezone" timezone="[[yourInputObject]]"></paper-timezone>
   The component maps the `timezone`property to your input  which it expects to be an object. The resultant object has two properties
-  `location` and `offset`. The resultant output looks like ` {location: "Asia/Bangkok", offset: 420} `
+  `location` and `offset`. The resultant output looks like ` {location: "Asia/Bangkok", offset: 420} `  
+      <paper-timezone label="Please select a timezone" timezone="[[yourInputObject]]"></paper-timezone>
 
-      <paper-timezone format-type="minutes" label="Please select a timezone" timezone="[[yourInputObject]]"></paper-timezone>
+
+    <paper-timezone format-type="minutes" label="Please select a timezone" timezone="[[yourInputObject]]"></paper-timezone>
   `paper-timezone` allows setting the offset property in minutes. By default, the offset property is show in hours but that can be changed to
   minutes by specifying the `format-type` as `minutes`. The above example would give out an object like ` {location: "Asia/Bangkok", offset: 42000 }`
 
@@ -66,7 +70,7 @@ If you want to save it in bower.json file, remember to add flag --save
                  :host {
                     display: block;
                 }
-                
+
                 .dialog {
                     outline: none;
                     z-index: 103;
@@ -75,43 +79,43 @@ If you want to save it in bower.json file, remember to add flag --save
                     max-height: 800px;
                     width: 60%;
                 }
-                
+
                 .map {
                     margin: 0 auto;
                     max-width: 1024px;
                     padding: 40px;
                 }
-                
+
                 .map-wrap {
                     background: var(--paper-timezone-background-color, #1976d3) url(/images/bg.png);
                     padding: 1px;
                     border-radius: 3px;
                     position: relative;
                 }
-                
+
                 .map-label {
                     line-height: 60px;
                     margin: 0;
                     color: var(--paper-timezone-label-color, #1976d3);
                     font-family: monospace;
                 }
-                
+
                 .map-label span {
                     display: block;
                     font-size: 20px;
                 }
-                
+
                 .map-label .map-label-name {
                     float: left;
                     padding-right: 10px;
                     text-align: right;
                 }
-                
+
                 .map-label .map-label-time {
                     padding-left: 10px;
                     text-align: left;
                 }
-                
+
                 .map-inset {
                     padding-bottom: 50%;
                     background: url(images/world.png) 50% 50%;
@@ -119,7 +123,7 @@ If you want to save it in bower.json file, remember to add flag --save
                     position: relative;
                     border-radius: 2px;
                 }
-                
+
                 .map-inset span {
                     width: 6px;
                     height: 6px;
@@ -130,11 +134,11 @@ If you want to save it in bower.json file, remember to add flag --save
                     border: var(--paper-timezone-circle-border-color, #0d47a1) 1px solid;
                     cursor: pointer;
                 }
-                
+
                 .map-inset span.active {
                     background: #0d47a1;
                 }
-                
+
                 .map-inset .map-axis-x {
                     position: absolute;
                     top: 0;
@@ -143,7 +147,7 @@ If you want to save it in bower.json file, remember to add flag --save
                     width: 0;
                     transition: left 50ms ease-out;
                 }
-                
+
                 .map-inset .map-axis-y {
                     position: absolute;
                     left: 0;
@@ -152,15 +156,15 @@ If you want to save it in bower.json file, remember to add flag --save
                     height: 0;
                     transition: top 50ms ease-out;
                 }
-                
+
                 * {
                     box-sizing: border-box;
                 }
-                
+
                 .hide {
                     display: none !important;
                 }
-                
+
                 .show {
                     display: block !important;
                 }

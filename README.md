@@ -12,7 +12,8 @@ We at Blue Water Tracks use it on our portal pages and we wanted to open source 
  - Extremely simple to set up.
  - Support for desktop and mobile mode using the ```responsive-width``` property.
  - Moment compatible object  ```{location: "Asia/Bangkok", offset: 420}```
- - Support for offset value in minutes. 
+ - Support for offset in minutes or hours.
+ - Support for offset value in minutes.
  - Support for custom styling.
 
 ## Installation
@@ -49,7 +50,7 @@ Format type is property that show offset as suffix in hours or minutes. By defau
 
 ## Reporting Bugs
 
-When filing a bug report, please provide an example of how to repoduce using
+When filing a bug report, please provide an example of how to reproduce using
 plunker, jsbin, jsfiddle, etc.
 
 
