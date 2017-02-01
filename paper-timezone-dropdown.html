@@ -12,26 +12,26 @@
         display: block;
         box-sizing: border-box;
       }
-      
+
       .container {
         position: relative;
       }
-      
+
       paper-material {
         left: 0;
         right: 0;
         position: absolute;
         z-index: 10;
       }
-      
+
       paper-item {
         cursor: pointer;
       }
-      
+
       .iron-selected {
         background: #E0E0E0;
       }
-      
+
       .timezone {
         font-family: 'Roboto', 'Noto', sans-serif;
         -webkit-font-smoothing: antialiased;
@@ -40,21 +40,21 @@
         line-height: 24px;
         color: #737373;
       }
-      
+
       .timezone::first-letter {
         visibility: hidden;
       }
-      
+
       .timezone-with-label {
         position: absolute;
         top: 12px;
       }
-      
+
       .timezone-without-label {
         position: absolute;
         top: -8px;
       }
-      
+
       .tzFormat {
         right: 10px;
         position: absolute;
@@ -88,7 +88,7 @@
     properties: {
 
       /**
-       * The label for paper-timezone input 
+       * The label for paper-timezone input
        */
       label: {
         type: String
@@ -132,7 +132,7 @@
       },
 
       /**
-       * Set to true to always float the label on paper-timezone. 
+       * Set to true to always float the label on paper-timezone.
        */
       alwaysFloatLabel: {
         type: Boolean,
@@ -156,7 +156,7 @@
       },
 
       /**
-       * The error message to display when the input is invalid. 
+       * The error message to display when the input is invalid.
        */
       errorMessage: {
         type: String
@@ -345,18 +345,18 @@
     },
 
     _getTimezoneOffsetFormat: function (item) {
-      if (item) {
+      if (!item) return;
         var offset = moment(new Date()).tz(item).utcOffset();
         var offsetFormatted = this._timezoneOffsetFormat(offset);
         return offsetFormatted;
-      }
     },
     _timezoneOffsetFormat: function (offset) {
       var timezoneOffset = Math.abs(offset);
       var operator = offset >= 0 ? '+' : '-';
       var hours = timezoneOffset / 60;
       var rem = timezoneOffset % 60;
-      if (rem <= 0) hours = hours + '.0';
+      //if (rem <= 0) hours = hours + '.0';
+      hours = (rem <=0) ? hours + '.0' : hours;
       timezoneOffset = operator + hours;
       return timezoneOffset;
     }

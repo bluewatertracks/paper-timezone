@@ -12,17 +12,21 @@
   with added features.
 
   To instantiate the default `paper-timezone` component without any fields, we simply declare the `paper-timezone` tags.
-      <paper-timezone></paper-timezone>
+
+    <paper-timezone></paper-timezone>
 
   The default `label` value `Timezone(Continent/City)` can be replaced like in the example below.
-      <paper-timezone label="Please select a timezone"></paper-timezone>
+
+    <paper-timezone label="Please select a timezone"></paper-timezone>
 
   The component maps the `timezone` property to your input  which it expects to be an object. The resultant object has two properties
   `location` and `offset`. The resultant output looks like ` {location: "Asia/Bangkok", offset: 420} `
-      <paper-timezone label="Please select a timezone" timezone="[[yourInputObject]]"></paper-timezone>
+
+    <paper-timezone label="Please select a timezone" timezone="[[yourInputObject]]"></paper-timezone>
 
   Based on the `format-type` field which by default displays minutes, you could change the offset value to be returned in minutes instead of
   hours, the resultant object would look like ` {location: "Asia/Bangkok", offset: 42000 } `
+
     <paper-timezone format-type="minutes" timezone="[[yourInputObject]]" ></paper-timezone>
 
   In order to support smaller screens, `paper-timezone` has a property called `responsive-width` which serves as a breakpoint below which the component will resize itself to a dropdown. This property
@@ -34,7 +38,7 @@
 
  There is support for custom error message using the `error-message` property.
 
-    <paper-timezone name="timezone" timezone="[[timezone]]" responsive-width="123px" label="Please select a timezone" error-message="Please enter a timezone offset" ></paper-timezone>
+    <paper-timezone name="timezone" label="Please select a timezone" error-message="Please enter a timezone offset" timezone="[[timezone]]" responsive-width="123px" ></paper-timezone>
 
 
 ### Styling
