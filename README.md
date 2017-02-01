@@ -4,7 +4,7 @@
 
 paper-timezone is a Polymer based web component used for interactively selecting a timezone locale from a map. On smaller screens, the component resizes itself to a dropdown with the ability to let the user select the locale from the dropdown list. It is heavily inspired by the world map on the momentjs site; it in fact is a rewrite of the same in Polymer although with a lot more added features.
 
-We at Blue Water Tracks use it on our portal pages and we wanted to open source the component to share it with the Polymer community.Demos and documentation can be found [here](http://github.com/bluewatertracks/paper-timezone)
+We at Blue Water Tracks use it on our portal pages and we wanted to open source the component to share it with the Polymer community.Demos and documentation can be found [here](http://bluewatertracks.github.io/paper-timezone/components/paper-timezone/)
 ![Sample screenshot](images/timezone.gif)
 ![dropdown](images/dropdown-view.png)
 
@@ -13,7 +13,6 @@ We at Blue Water Tracks use it on our portal pages and we wanted to open source 
  - Support for desktop and mobile mode using the ```responsive-width``` property.
  - Moment compatible object  ```{location: "Asia/Bangkok", offset: 420}```
  - Support for offset in minutes or hours.
- - Support for offset value in minutes.
  - Support for custom styling.
 
 ## Installation
@@ -25,28 +24,12 @@ The element can be installed using bower using
 ## Usage
 
 - Following code is required to place in the polymer web component.
-		<paper-timezone  name="timezone" timezone="[[timezone]]" label="Timezone (Continent/City)" error-message="Please enter a timezone offset"></paper-timezone>
+```html
+    <paper-timezone  name="timezone" timezone="[[timezone]]" label="Timezone (Continent/City)" error-message="Please enter a timezone offset"></paper-timezone>
+```    
 - It is used to select timezone offset from dialog or dropdown.
-Check out the [getting started guide](http://bluewatertracks.github.io/paper-timezone/).
+Check out the [getting started guide](http://bluewatertracks.github.io/paper-timezone/components/paper-timezone/).
 
-## Examples
-
-Default timezone:
-
-```html
-<paper-timezone  name="timezone" timezone="[[timezone]]" label="Timezone (Continent/City)" error-message="Please enter a timezone offset"></paper-timezone>
-```
-
-You may also specify a responsive width to display this element as dropdown.
-```html
-<paper-timezone timezone="[[timezone]]" responsive-width="[[responsiveWidth]]" label="Timezone (Continent/City)" error-message="Please enter a timezone offset"></paper-timezone>
-```
-
-Format type is property that show offset as suffix in hours or minutes. By default it will be shown in minutes.
-
-```html
-<paper-timezone format-type="hours" timezone="[[timezone]]" label="Timezone (Continent/City)" error-message="Please enter a timezone offset"></paper-timezone>
-```
 
 ## Reporting Bugs
 
