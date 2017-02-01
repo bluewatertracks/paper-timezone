@@ -14,23 +14,23 @@
   To instantiate the default `paper-timezone` component without any fields, we simply declare the `paper-timezone` tags.
       <paper-timezone></paper-timezone>
 
-  The default `label` is `Timezone(Continent/City)` which can be replaced like in the example below.
+  The default `label` value `Timezone(Continent/City)` can be replaced like in the example below.
       <paper-timezone label="Please select a timezone"></paper-timezone>
 
-  The component maps the `timezone`property to your input  which it expects to be an object. The resultant object has two properties
-  `location` and `offset`. The resultant output looks like ` {location: "Asia/Bangkok", offset: 420} `  
+  The component maps the `timezone` property to your input  which it expects to be an object. The resultant object has two properties
+  `location` and `offset`. The resultant output looks like ` {location: "Asia/Bangkok", offset: 420} `
       <paper-timezone label="Please select a timezone" timezone="[[yourInputObject]]"></paper-timezone>
 
-
-    <paper-timezone format-type="minutes" label="Please select a timezone" timezone="[[yourInputObject]]"></paper-timezone>
-  `paper-timezone` allows setting the offset property in minutes. By default, the offset property is show in hours but that can be changed to
-  minutes by specifying the `format-type` as `minutes`. The above example would give out an object like ` {location: "Asia/Bangkok", offset: 42000 }`
-
+  Based on the `format-type` field which by default displays minutes, you could change the offset value to be returned in minutes instead of
+  hours, the resultant object would look like ` {location: "Asia/Bangkok", offset: 42000 } `
+    <paper-timezone format-type="minutes" timezone="[[yourInputObject]]" ></paper-timezone>
 
   In order to support smaller screens, `paper-timezone` has a property called `responsive-width` which serves as a breakpoint below which the component will resize itself to a dropdown. This property
   can be adjusted according to your requirements. It expects the value to be in the form of `500px`; by default, the `responsive-width` value is set to 768px.
+  To use only the dropdown version of the component, you could set the value of the response-width to a very high breakpoint such that it displays only the
+  dropdown version of the component.
 
-    <paper-timezone name="timezone" timezone="[[timezone]]" responsive-width="[[responsiveWidth]]" label="Please select a timezone"></paper-timezone>
+    <paper-timezone name="timezone" timezone="[[timezone]]" responsive-width="500px" label="Please select a timezone"></paper-timezone>
 
  There is support for custom error message using the `error-message` property.
 
