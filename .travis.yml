@@ -4,6 +4,7 @@ before_script:
   - npm install -g bower polylint web-component-tester
   - bower install
   - polylint
+  - java -v
 
 script: 
   - wct
