@@ -1,5 +1,6 @@
 {
   "name": "paper-timezone",
+  "version": "1.0.0",
   "authors": [
     "Bhargav Konkathi",
     "Raju Maisnam",
@@ -14,7 +15,7 @@
     "timezone-component"
   ],
   "license": "MIT",
-  "homepage": "",
+  "homepage": "https://github.com/bluewatertracks/paper-timezone",
   "ignore": [
     "**/.*",
     "node_modules",
