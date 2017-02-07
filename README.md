@@ -36,6 +36,23 @@ The element can be installed using bower using
 - It is used to select timezone offset from dialog or dropdown.
 Check out the [getting started guide](http://bluewatertracks.github.io/paper-timezone/components/paper-timezone/).
 
+## Simple demo with playground
+
+<!--
+```
+<custom-element-demo>
+  <template>
+    <script src="../webcomponentsjs/webcomponents-lite.js"></script>
+    <link rel="import" href="paper-timezone.html">
+    <next-code-block></next-code-block>
+  </template>
+</custom-element-demo>
+```
+-->
+```html
+<paper-timezone></paper-timezone>
+```
+
 ## Reporting Bugs
 
 When filing a bug report, please provide an example of how to reproduce using
