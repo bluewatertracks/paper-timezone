@@ -1,6 +1,6 @@
 {
   "name": "paper-timezone",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "authors": [
     "Bhargav Konkathi",
     "Raju Maisnam",
@@ -10,10 +10,11 @@
   "description": "Timezone offset and location based on user choice",
   "main": "paper-timezone.html",
   "keywords": [
-    "web-components",
-    "webcomponent",
-    "paper-timezone",
     "polymer",
+    "web-components",
+    "web-component",
+    "paper-timezone",
+    "timezone",
     "timezone-component"
   ],
   "license": "MIT",
