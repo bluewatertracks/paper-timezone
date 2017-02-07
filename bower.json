@@ -10,6 +10,7 @@
   "description": "Timezone offset and location based on user choice",
   "main": "paper-timezone.html",
   "keywords": [
+    "web-components",
     "webcomponent",
     "paper-timezone",
     "timezone-component"
