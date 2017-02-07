@@ -1,6 +1,6 @@
 {
   "name": "paper-timezone",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "authors": [
     "Bhargav Konkathi",
     "Raju Maisnam",
@@ -13,6 +13,7 @@
     "web-components",
     "webcomponent",
     "paper-timezone",
+    "polymer",
     "timezone-component"
   ],
   "license": "MIT",
