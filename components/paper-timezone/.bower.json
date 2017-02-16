@@ -1,0 +1,56 @@
+{
+  "name": "paper-timezone",
+  "authors": [
+    "Bhargav Konkathi",
+    "Raju Maisnam",
+    "Dmytro Hrytsenko",
+    "Blue Water Tracks Team"
+  ],
+  "description": "Timezone offset and location based on user choice",
+  "main": "paper-timezone.html",
+  "keywords": [
+    "polymer",
+    "web-components",
+    "web-component",
+    "paper-timezone",
+    "timezone",
+    "timezone-component"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/bluewatertracks/paper-timezone",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.7.0",
+    "paper-dialog": "PolymerElements/paper-dialog#^1.1.0",
+    "paper-input": "PolymerElements/paper-input#^1.1.22",
+    "paper-menu": "PolymerElements/paper-menu#^1.2.2",
+    "paper-item": "PolymerElements/paper-item#^1.2.1",
+    "moment": "^2.17.1",
+    "iron-media-query": "PolymerElements/iron-media-query#^1.0.8",
+    "moment-timezone": "^0.5.11",
+    "paper-dropdown-menu": "PolymerElements/paper-dropdown-menu#^1.4.3"
+  },
+  "devDependencies": {
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
+    "iron-test-helpers": "PolymerElements/iron-test-helpers#^1.0.0",
+    "test-fixture": "PolymerElements/test-fixture#^1.0.0",
+    "web-component-tester": "^4.0.0",
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0",
+    "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^1.2.5",
+    "marked-element": "PolymerElements/marked-element#^1.2.0"
+  },
+  "_release": "7f21efb6e0",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "7f21efb6e0d8f719416d4e10bbaac4e64a381b7e"
+  },
+  "_source": "https://github.com/bluewatertracks/paper-timezone.git",
+  "_target": "master",
+  "_originalSource": "bluewatertracks/paper-timezone",
+  "_direct": true
+}

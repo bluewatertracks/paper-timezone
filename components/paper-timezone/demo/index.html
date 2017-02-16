@@ -1,0 +1,121 @@
+<!doctype html>
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
+  <title>paper-dialog demo</title>
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+  <link rel="import" href="../../paper-dialog/paper-dialog.html">
+  <link rel="import" href="../../paper-button/paper-button.html">
+  <link rel="import" href="../../paper-styles/color.html">
+  <link rel="import" href="../../paper-styles/demo-pages.html">
+  <link rel="import" href="../../neon-animation/neon-animations.html">
+  <link rel="import" href="../../paper-dropdown-menu/paper-dropdown-menu.html">
+  <link rel="import" href="../../paper-menu/paper-menu.html">
+  <link rel="import" href="../../paper-item/paper-item.html">
+  <link rel="import" href="../../paper-input/paper-input.html">
+  <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+  <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
+  <link rel="import" href="../paper-timezone.html">
+</head>
+
+<body class="centered">
+
+  <style>
+    .map-inset span {
+      width: 6px;
+      height: 6px;
+      margin: -3px 0 0 -3px;
+      background: var(--paper-timezone-circle-background-color, #fff);
+      position: absolute;
+      border-radius: 3px;
+      border: var(--paper-timezone-circle-border-color, #0d47a1) 1px solid;
+      cursor: pointer;
+    }
+
+    * {
+      box-sizing: border-box !important;
+    }
+  </style>
+  <style is="custom-style" include="demo-pages-shared-styles">
+    .centered {
+      min-width: 90%;
+    }
+
+    demo-snippet {
+      --demo-snippet-code: {
+        max-height: 250px;
+      }
+    }
+  </style>
+  <h4>
+    Default timezone example. Here timezone property is a object which has two properties they are location and offset in minutes.
+  </h4>
+  <demo-snippet>
+    <template is="dom-bind" id="app">
+      <paper-timezone timezone="[[timezone]]" label="Timezone (Continent/City)"
+        error-message="Please enter a timezone offset"></paper-timezone>
+    </template>
+  </demo-snippet>
+  <h4>Dialog can be styled using below custom properties to change dialog background color or pointer color etc.</h4>
+  <demo-snippet>
+
+    <template>
+      <style is="custom-style">
+      #timezone {
+        --paper-timezone-background-color: black;
+        --paper-timezone-label-color: green;
+        --paper-timezone-circle-border-color: yellow;
+        --paper-timezone-circle-background-color: red;
+        --paper-timezone-pointer-color: lightgreen;
+      }
+    </style>
+      <paper-timezone id="timezone" label="Timezone (Continent/City)" error-message="Please enter a timezone offset"></paper-timezone>
+    </template>
+  </demo-snippet>
+  <h4> Timezone with format-time in minutes.Format-type is a property which is used for dislpaying timezone offset as a suffix either in hours or minutes.
+    By default it is displayed in hours format. For example if offset is +330 minutes then it is in hours format +5.5 and in minutes format 330.</h4>
+  <demo-snippet>
+    <template>
+      <paper-timezone format-type="minutes" label="Timezone (Continent/City)"
+        error-message="Please enter a timezone offset"></paper-timezone>
+    </template>
+  </demo-snippet>
+   <h4> Timezone with responsive-width which is property responsible for changing the view depending on the browser width. If browser width matches or less than responsive width then paper-timezone will be displayed as dropdown with search functionality.</h4>
+  <demo-snippet>
+    <template>
+      <paper-timezone responsive-width="1024px" label="Timezone (Continent/City)"
+        error-message="Please enter a timezone offset"></paper-timezone>
+    </template>
+  </demo-snippet>
+  <h4> Timezone component can be used as only dropdown mode in following example.</h4>
+  <demo-snippet>
+    <template>
+      <paper-timezone responsive-width="3000px" label="Timezone (Continent/City)"
+        error-message="Please enter a timezone offset"></paper-timezone>
+    </template>
+  </demo-snippet>
+  <p>Note: In above example map dialog will not be displayed. Instead dropdown will be displayed.</p>
+  <script>
+    (function () {
+      var scope = document.querySelector('#app');
+      document.addEventListener('WebComponentsReady', function () {
+        scope.timezone = {
+          location: "Pacific/Tarawa",
+          offset: 720
+        };
+      });
+    })();
+  </script>
+</body>
+</html>

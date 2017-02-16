@@ -1,0 +1,462 @@
+<link rel="import" href="../paper-input/paper-input.html">
+<link rel="import" href="../paper-dialog/paper-dialog.html">
+<link rel="import" href="../iron-media-query/iron-media-query.html">
+<script type="text/javascript" src="../moment/min/moment.min.js"></script>
+<script type="text/javascript" src="src/center.js"></script>
+<script type="text/javascript" src="src/links.js"></script>
+<script type="text/javascript" src="src/timezones.js"></script>
+<script type="tex/javascript" src="../moment-timezone/builds/moment-timezone-with-data.min.js">
+</script>
+<link rel="import" href="paper-timezone-dropdown.html">
+<!--
+  `paper-timezone` is inspired by the worldmap with timezone selection feature on the momentjs website. It is a rewrite of the same in Polymer although
+  with added features.
+
+  To instantiate the default `paper-timezone` component without any fields, we simply declare the `paper-timezone` tags.
+
+    <paper-timezone></paper-timezone>
+
+  The default `label` value `Timezone(Continent/City)` can be replaced like in the example below.
+
+    <paper-timezone label="Please select a timezone"></paper-timezone>
+
+  The component maps the `timezone` property to your input  which it expects to be an object. The resultant object has two properties
+  `location` and `offset`. The resultant output looks like ` {location: "Asia/Bangkok", offset: 420} `
+
+    <paper-timezone label="Please select a timezone" timezone="[[yourInputObject]]"></paper-timezone>
+
+  Based on the `format-type` field which by default displays minutes, you could change the offset value to be returned in minutes instead of
+  hours, the resultant object would look like ` {location: "Asia/Bangkok", offset: 420 } `
+
+    <paper-timezone format-type="minutes" timezone="[[yourInputObject]]" ></paper-timezone>
+
+  In order to support smaller screens, `paper-timezone` has a property called `responsive-width` which serves as a breakpoint below which the component will resize itself to a dropdown. This property
+  can be adjusted according to your requirements. It expects the value to be in the form of `500px`; by default, the `responsive-width` value is set to 768px.
+  To use only the dropdown version of the component, you could set the value of the response-width to a very high breakpoint such that it displays only the
+  dropdown version of the component.
+
+    <paper-timezone name="timezone" timezone="[[timezone]]" responsive-width="500px" label="Please select a timezone"></paper-timezone>
+
+ There is support for custom error message using the `error-message` property.
+
+    <paper-timezone name="timezone" label="Please select a timezone" error-message="Please enter a timezone offset" timezone="[[timezone]]" responsive-width="123px" ></paper-timezone>
+
+
+### Styling
+
+The following custom properties are available for styling:
+
+
+Custom property | Description | Default
+----------------|-------------|----------
+`--paper-timezone-background-color` | Background color of dialog map | `#1976d3`
+`--paper-timezone-label-color` | Text color of which displayed in the dialog | `#1976d3`
+`--paper-timezone-circle-border-color`| Circle border color (dot) in the dialog. |  `#1976d3`
+`--paper-timezone-circle-background-color`| Circle background color (dot) in the dialog. |  `#1976d3`
+`--paper-timezone-pointer-color`| Pointer color in the dialog. |  `#1976d3`
+
+### Installation
+
+Install with bower
+
+    bower install paper-timezone
+
+If you want to save it in bower.json file, remember to add flag --save
+
+    bower install --save paper-timezone
+
+@element paper-timezone
+@demo demo/index.html
+-->
+<dom-module id="paper-timezone">
+    <template>
+        <custom-style>
+            <style is="custom-style">
+                 :host {
+                    display: block;
+                }
+
+                .dialog {
+                    outline: none;
+                    z-index: 103;
+                    box-sizing: border-box;
+                    max-width: 1200px;
+                    max-height: 800px;
+                    width: 60%;
+                }
+
+                .map {
+                    margin: 0 auto;
+                    max-width: 1024px;
+                    padding: 40px;
+                }
+
+                .map-wrap {
+                    background: var(--paper-timezone-background-color, #1976d3) url(images/bg.png);
+                    padding: 1px;
+                    border-radius: 3px;
+                    position: relative;
+                }
+
+                .map-label {
+                    line-height: 60px;
+                    margin: 0;
+                    color: var(--paper-timezone-label-color, #1976d3);
+                    font-family: monospace;
+                }
+
+                .map-label span {
+                    display: block;
+                    font-size: 20px;
+                }
+
+                .map-label .map-label-name {
+                    float: left;
+                    padding-right: 10px;
+                    text-align: right;
+                }
+
+                .map-label .map-label-time {
+                    padding-left: 10px;
+                    text-align: left;
+                }
+
+                .map-inset {
+                    padding-bottom: 50%;
+                    background: url(images/world.png) 50% 50%;
+                    background-size: cover;
+                    position: relative;
+                    border-radius: 2px;
+                }
+
+                .map-inset span {
+                    width: 6px;
+                    height: 6px;
+                    margin: -3px 0 0 -3px;
+                    background: var(--paper-timezone-circle-background-color, #fff);
+                    position: absolute;
+                    border-radius: 3px;
+                    border: var(--paper-timezone-circle-border-color, #0d47a1) 1px solid;
+                    cursor: pointer;
+                }
+
+                .map-inset span.active {
+                    background: #0d47a1;
+                }
+
+                .map-inset .map-axis-x {
+                    position: absolute;
+                    top: 0;
+                    bottom: 0;
+                    border-left: var(--paper-timezone-pointer-color, rgba(13, 71, 161, 0.5)) 1px solid;
+                    width: 0;
+                    transition: left 50ms ease-out;
+                }
+
+                .map-inset .map-axis-y {
+                    position: absolute;
+                    left: 0;
+                    right: 0;
+                    border-top: var(--paper-timezone-pointer-color, rgba(13, 71, 161, 0.5)) 1px solid;
+                    height: 0;
+                    transition: top 50ms ease-out;
+                }
+
+                * {
+                    box-sizing: border-box;
+                }
+
+                .hide {
+                    display: none !important;
+                }
+
+                .show {
+                    display: block !important;
+                }
+            </style>
+        </custom-style>
+        
+        <iron-media-query query="(max-width:[[responsiveWidth]])" query-matches="{{_smallScreen}}"></iron-media-query>
+        
+        <div id="dialogView" hidden$="[[_smallScreen]]">
+             
+             <paper-input 
+                id="input"
+                label="[[label]]" 
+                disabled="[[disabled]]" 
+                no-label-float="[[noLabelFloat]]" 
+                readonly="[[readonly]]"
+                placeholder="[[placeholder]]" 
+                required="[[required]]" 
+                auto-validate="[[autoValidate]]" 
+                value="{{timezone.location}}"
+                error-message="[[errorMessage]]" 
+                on-tap="_openDialog">
+                <div suffix style="cursor:pointer;">GMT [[_timezoneFormatVal]]</div>
+            </paper-input>
+
+            <paper-dialog id="dialog" class="dialog" on-iron-overlay-closed="_revertValue" noCancelOnOutsideClick="true">
+                <div id="map" class="map">
+                    <h4 class="map-label">
+                        <span class="map-label-name" id="loclabel">[[timezone.location]]</span>
+                        <span class="map-label-time" id="offsetlabel"> GMT {{_timezoneFormatVal}} ([[_computetimeAbbr(timezone)]])</span>
+                    </h4>
+                    <div class="map-wrap">
+                        <div id="inset" class="map-inset" on-mousemove="_onMouseMove" on-tap="_mouseClicked">
+                            <div id="axisX" class="map-axis-x"></div>
+                            <div id="axisY" class="map-axis-y"></div>
+                        </div>
+                    </div>
+                </div>
+            </paper-dialog>
+
+        </div>
+
+        <div id="dropdownView" hidden$="[[!_smallScreen]]">
+           <paper-timezone-dropdown 
+                id="dropdown"
+                label="[[label]]" 
+                placeholder="[[placeholder]]" 
+                max-suggestions="[[maxSuggestion]]" 
+                required="[[required]]" 
+                input-value="[[timezone.location]]" 
+                timezone="{{timezone}}" 
+                auto-validate="[[autoValidate]]" 
+                error-message$="[[errorMessage]]">
+            </paper-timezone-dropdown>
+        </div>
+
+    </template>
+    
+    <script>
+        (function () {
+            'use strict';
+
+
+            Polymer({
+                is: 'paper-timezone',
+                properties: {
+
+                    /**
+                     * The label that will show up as the label for tags input. It not specified, defualt Timezone(Continent/City) will be displayed.
+                     */
+                    label: {
+                        type: String,
+                        value: "Timezone(Continent/City)"
+                    },
+
+                    /**
+                    * Set to true to mark the paper-timezone as required.
+                    */
+                    required: {
+                        type: Boolean,
+                        value: false
+                    },
+
+                    /* Set to true to set paper-timezone in readonly mode*/
+                    readonly: {
+                        type: Boolean,
+                        value: true
+                    },
+
+                    /**
+                     * Set to true to auto-validate the input value.
+                     */
+                    autoValidate: {
+                        type: Boolean,
+                        value: false
+                    },
+
+                    /**
+                     * Set to true to disable paper-timezone.
+                     */
+                    disabled: {
+                        type: Boolean,
+                        value: false
+                    },
+
+                    /**
+                     * Set to true to disable the floating label.
+                     */
+                    noLabelFloat: {
+                        type: Boolean,
+                        value: false
+                    },
+
+                    placeholder: {
+                        type: String,
+                        value: "Please select timezone."
+                    },
+
+                    /**
+                    * Bind this to the <paper-input>'s errorMessage property.
+                    */
+                    errorMessage: String,
+
+                    _timezones: {
+                        type: Array,
+                    },
+
+                    /**
+                    *Format type can be type of offset can be showed in minutes or hours format.
+                    *By defualt value is hours
+                    */
+                    formatType: {
+                        type: String,
+                        value: "hours"
+                    },
+                    
+                    /**
+                    *Timezone property has location and offset in minutes. By defualt it will guess the timezone using
+                    * moment.guess().
+                    */
+                    timezone: {
+                        type: Object,
+                        value: {
+                            location: moment.tz.guess(),
+                            offset: moment(new Date()).tz(moment.tz.guess()).utcOffset()
+                        },
+                        observer: "_dataChange",
+                        notify: true
+                    },
+
+                    /**
+                    * If the viewport's width is smaller than this value, the paper-timezone will change to dropdown view.
+                    * In this mode dialog will not be displayed instead dropdown is displayed.
+                    */
+                    responsiveWidth: {
+                        type: String,
+                        value: '768px',
+                        notify: true
+                    },
+                    _centers: {
+                        type: Array,
+                        value: [],
+                        notify: true
+                    },
+                    _backUpTimezone: {
+                        type: String
+                    },
+                    _timezoneFormatVal: {
+                        type: String
+                    },
+                    _smallScreen: Boolean,
+                    
+                    /*
+                    * Maximum number of suggestions to show up in timezone dropdown view.
+                    */
+                    maxSuggestion: {
+                        type: Number,
+                        value: 5
+                    }
+                },
+                ready: function () {
+                    this._timezones = zonesData;
+                    this._generateZones();
+                },
+                _computetimeAbbr: function (timezone) {
+                    var m;
+                    if (timezone.location) {
+                        m = moment().tz(timezone.location);
+                    } else {
+                        var location = moment.tz.guess();
+                        m = moment().tz(location);
+                        this._timezoneFormatVal = this._timezoneFormat(m._offset);
+                    }
+                    return m.format("hh:mm a ") + m.zoneAbbr();
+                },
+                _mouseClicked: function (e) {
+                    if (e.target.nodeName.toLowerCase() == "span") {
+                        this._backUpTimezone = this.timezone.location;
+                        this.$.dialog.close();
+                    }
+                },
+                _onMouseMove: function (e) {
+                    var x = e.pageX - e.offsetX,
+                        y = e.pageY - e.offsetY,
+                        px = x / this.$.map.offsetHeight,
+                        py = y / this.$.map.offsetWidth,
+                        dist, closestDist = 100,
+                        closestCenter, i;
+                    var X = parseFloat(e.target.style.left) / 100;
+                    var Y = parseFloat(e.target.style.top) / 100;
+                    for (i = 0; i < this._centers.length; i++) {
+                        dist = this._centers[i].distSqr(X, Y);
+                        if (dist < closestDist) {
+                            closestCenter = this._centers[i];
+                            closestDist = dist;
+                        }
+                    }
+                    if (closestCenter) {
+                        this._changeCenter(closestCenter);
+                    }
+                },
+                _openDialog: function () {
+                    this._backUpTimezone = this.$.input.value = this.timezone.location;
+                    this._setPointer(this.timezone.location);
+                    this.$.dialog.open();
+                },
+                _generateZones: function () {
+                    for (var name in this._timezones.zones) {
+                        this._centers.push(new Center(this._timezones.zones[name], this));
+                    }
+                },
+                _changeCenter: function (center) {
+                    var zone = moment().tz(center.name);
+                    this.timezone = {
+                        offset: zone.utcOffset(),
+                        location: zone.tz()
+                    };
+                    this._setPointer(center.name);
+                },
+                _revertValue: function () {
+                    this.$.input.value = this.timezone.location = this._backUpTimezone;
+                    this.timezone.offset = moment(new Date()).tz(this.timezone.location).utcOffset();
+                    this.timezone.notify = true;
+                    this.$.input.value = this.timezone.location;
+                    this._timezoneFormatVal = this._timezoneFormat(this.timezone.offset);
+                },
+                _setPointer: function (loc) {
+                    var loc = this.$.input.value || loc;
+                    var locExists = links.find(function (element) {
+                        var locations = element.split('|');
+                        return locations.indexOf(loc) > -1;
+                    });
+                    if (locExists) loc = locExists.split('|')[0];
+                    var selector = ".map #inset span[name='" + loc + "']";
+                    var span = this.$$(selector);
+                    if (span) {
+                        var axisX = this.$$("#axisX");
+                        var left = span.style.left;
+                        var top = span.style.top;
+                        var axisY = this.$$("#axisY");
+                        axisX.setAttribute("style", "left:" + left);
+                        axisY.setAttribute("style", "top:" + top);
+                        var offset = moment(new Date()).tz(loc).utcOffset();
+                        this._timezoneFormatVal = this._timezoneFormat(offset);
+                        this.timezone = {
+                            location: loc,
+                            offset: offset
+                        };
+                    }
+                },
+                _timezoneFormat: function (val) {
+                    if (this.formatType == "hours") {
+                        var timezone = Math.abs(val);
+                        var operator = val >= 0 ? '+' : '-';
+                        var hours = timezone / 60;
+                        var rem = timezone % 60;
+                        if (rem <= 0) hours = hours + '.0';
+                        timezone = operator + hours;
+                        return timezone;
+                    } else {
+                        return val;
+                    }
+                },
+                _dataChange: function (data) {
+                    this._timezoneFormatVal = this._timezoneFormat(data.offset);
+                }
+            });
+        })();
+    </script>
+</dom-module>

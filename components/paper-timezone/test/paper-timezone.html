@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>paper-timezone test</title>
+
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../../web-component-tester/browser.js"></script>
+    <script src="../../iron-test-helpers/mock-interactions.js"></script>
+
+    <link rel="import" href="../paper-timezone.html">
+  </head>
+  <body>
+
+    <test-fixture id="basic">
+      <template>
+        <paper-timezone></paper-timezone>
+      </template>
+    </test-fixture>
+
+    <template is="dom-bind" id="custom-properties">
+        <paper-timezone id="timezoneElement" responsive-width="1024px" timezone='{{timezone}}' format-type="minutes" label="Custom timezone label"></paper-timezone>
+    </template>
+
+    <test-fixture id="timezone-dialog-mode">
+      <template>
+        <paper-timezone responsive-width="50px"></paper-timezone>      
+      </template>
+    </test-fixture>
+
+    <test-fixture id="timezone-dropdown-mode">
+      <template>
+        <paper-timezone responsive-width="9999px"></paper-timezone>
+      </template>
+    </test-fixture>
+
+    <script>
+      suite('paper-timezone properties', function() {
+        var basicFixture;
+
+        setup(function() {
+          basicFixture = fixture('basic');
+        });
+
+        test('instantiating the element works', function() {
+          assert.equal(basicFixture.is, 'paper-timezone');
+        });
+
+        test('get timezone object', function() {
+          assert.isObject(basicFixture.timezone);
+        });
+
+        test('get default responsive width', function() {
+          assert.isString(basicFixture.responsiveWidth);
+          assert.equal(basicFixture.responsiveWidth, '768px');
+        });
+
+        test('get default format type', function() {
+          assert.isString(basicFixture.formatType);
+          assert.equal(basicFixture.formatType, 'hours');
+        });
+
+        test('get default label', function() {
+          assert.isString(basicFixture.label);
+          assert.equal(basicFixture.label, "Timezone(Continent/City)");
+        });
+
+        test('bind to timezone', function() {
+          var scope = document.querySelector('#custom-properties');
+          scope.timezone = {
+            location: "Pacific/Tarawa",
+            offset: 720
+          };
+          assert.isObject(scope.$.timezoneElement.timezone);
+          assert.deepEqual(scope.$.timezoneElement.timezone, scope.timezone);
+          assert.equal(scope.$.timezoneElement.$.input.value, scope.timezone.location);
+        });
+
+        test('get custom responsive width', function() {
+          var scope = document.querySelector('#custom-properties');
+          assert.isString(scope.$.timezoneElement.responsiveWidth);
+          assert.equal(scope.$.timezoneElement.responsiveWidth, '1024px');
+        });
+
+        test('get custom format type value', function() {
+          var scope = document.querySelector('#custom-properties');
+          assert.isString(scope.$.timezoneElement.formatType);
+          assert.equal(scope.$.timezoneElement.formatType, 'minutes');
+        });
+
+      });
+
+      suite('paper-timezone dialog mode', function() {
+        var dialogModeFixture;
+        setup(function() {
+          dialogModeFixture = fixture('timezone-dialog-mode');
+        });
+
+        test('dialog view hidden state must be false', function() {
+          assert.isFalse(dialogModeFixture.$.dialogView.hidden);
+        });
+
+        test('dropdown view hidden state must be true', function() {
+          assert.isTrue(dialogModeFixture.$.dropdownView.hidden);
+        });
+
+        test('dialog opened state should be false', function() {
+          assert.isFalse(dialogModeFixture.$.dialog.opened);
+        });
+
+        test('emulate tap on input and open dialog with map', function(done) {
+          var inputElement = dialogModeFixture.$.input;
+          inputElement.addEventListener('tap', function() {
+            assert.isTrue(dialogModeFixture.$.dialog.opened);
+            done();
+          });
+          MockInteractions.tap(inputElement);
+        });
+
+        /*test('open dialog and emulate mouse move to select location', function(done) {
+          var inputElement = dialogModeFixture.$.input;
+          MockInteractions.tap(inputElement);
+          assert.isTrue(dialogModeFixture.$.dialog.opened);
+          var mapInset = dialogModeFixture.$.inset;
+          mapInset.addEventListener('mousemove', function(e) {
+            console.log(e.pageX, e.offsetX);
+            console.log(e.pageY, e.offsetY);
+            assert.equal(dialogModeFixture.timezone.location, {});
+            done();
+          });
+          //from x=703 y=142 to x=987 y=525
+          var middleCoords = MockInteractions.middleOfNode(dialogModeFixture.$.inset);
+          MockInteractions.focus(mapInset);
+          var startXY = {x: 10, y: 10};
+          var endXY   = {x: 150, y: 100};
+          MockInteractions.move(mapInset, startXY, endXY, 5);
+          MockInteractions.tap(mapInset);
+        });*/
+
+      });
+      suite('paper-timezone dropdown mode', function() {
+        var dropdownModeFixture;
+        setup(function() {
+          dropdownModeFixture = fixture('timezone-dropdown-mode');
+        });
+
+        test('dialog view hidden state must be true', function() {
+          assert.isTrue(dropdownModeFixture.$.dialogView.hidden);
+        });
+
+        test('dropdown view hidden state must be false', function() {
+          assert.isFalse(dropdownModeFixture.$.dropdownView.hidden);
+        });
+
+        test('get timezone object in dropdown mode', function() {
+          assert.isObject(dropdownModeFixture.timezone);
+        });
+
+        test('get responsive width for dropdown mode', function() {
+          assert.isString(dropdownModeFixture.responsiveWidth);
+          assert.equal(dropdownModeFixture.responsiveWidth, '9999px');
+        });
+
+        test('get default label for dropdown mode', function() {
+          assert.isString(dropdownModeFixture.label);
+          assert.equal(dropdownModeFixture.label, "Timezone(Continent/City)");
+        });
+
+        test('get 0 suggestions by entering `abcd` to input field', function(done) {
+          var dropdownInput = dropdownModeFixture.$.dropdown.querySelector('paper-input');
+          dropdownInput.value = 'abcd';
+          dropdownInput.addEventListener('keyup', function() {
+              assert.isArray(dropdownModeFixture.$.dropdown._suggestions);
+              assert.equal(dropdownModeFixture.$.dropdown._suggestions.length, 0);
+              done();
+          });
+          MockInteractions.focus(dropdownInput);
+          MockInteractions.pressAndReleaseKeyOn(dropdownInput, '65');
+        });
+
+        test('get 5 suggestions by entering `a` to input field', function(done) {
+          var dropdownInput = dropdownModeFixture.$.dropdown.querySelector('paper-input');
+          dropdownInput.value = 'a';
+          dropdownInput.addEventListener('keyup', function() {
+              assert.isArray(dropdownModeFixture.$.dropdown._suggestions);
+              assert.equal(dropdownModeFixture.$.dropdown._suggestions.length, 5);
+              done();
+          });
+          MockInteractions.focus(dropdownInput);
+          MockInteractions.pressAndReleaseKeyOn(dropdownInput, '65');
+        });
+
+      });
+    </script>
+  </body>
+</html>
