@@ -176,7 +176,6 @@ If you want to save it in bower.json file, remember to add flag --save
             </style>
         </custom-style>
         
-        <iron-ajax auto url="../moment-timezone/data/meta/latest.json" handle-as="json" on-response="_handleResponse"></iron-ajax>
         <iron-media-query query="(max-width:[[responsiveWidth]])" query-matches="{{_smallScreen}}"></iron-media-query>
         
         <div id="dialogView" hidden$="[[_smallScreen]]">
@@ -456,10 +455,6 @@ If you want to save it in bower.json file, remember to add flag --save
                 },
                 _dataChange: function (data) {
                     this._timezoneFormatVal = this._timezoneFormat(data.offset);
-                },
-                _handleResponse: function (e) {
-                    this._timezones = e.detail.response;
-                    this._generateZones();
                 }
             });
         })();
