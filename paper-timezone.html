@@ -1,11 +1,12 @@
 <link rel="import" href="../paper-input/paper-input.html">
 <link rel="import" href="../paper-dialog/paper-dialog.html">
-<link rel="import" href="../iron-ajax/iron-ajax.html">
 <link rel="import" href="../iron-media-query/iron-media-query.html">
 <script type="text/javascript" src="../moment/min/moment.min.js"></script>
 <script type="text/javascript" src="src/center.js"></script>
 <script type="text/javascript" src="src/links.js"></script>
-<script type="text/javascript" src="../moment-timezone/builds/moment-timezone-with-data.min.js"></script>
+<script type="text/javascript" src="src/timezones.js"></script>
+<script type="tex/javascript" src="../moment-timezone/builds/moment-timezone-with-data.min.js">
+</script>
 <link rel="import" href="paper-timezone-dropdown.html">
 <!--
   `paper-timezone` is inspired by the worldmap with timezone selection feature on the momentjs website. It is a rewrite of the same in Polymer although
@@ -349,6 +350,10 @@ If you want to save it in bower.json file, remember to add flag --save
                         type: Number,
                         value: 5
                     }
+                },
+                ready: function () {
+                    this._timezones = zonesData;
+                    this._generateZones();
                 },
                 _computetimeAbbr: function (timezone) {
                     var m;
