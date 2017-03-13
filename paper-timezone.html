@@ -1,3 +1,4 @@
+<link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../paper-input/paper-input.html">
 <link rel="import" href="../paper-dialog/paper-dialog.html">
 <link rel="import" href="../iron-media-query/iron-media-query.html">
@@ -398,7 +399,7 @@ If you want to save it in bower.json file, remember to add flag --save
                 },
                 _generateZones: function () {
                     for (var name in this._timezones.zones) {
-                        this._centers.push(new Center(this._timezones.zones[name], this));
+                        this._centers.push(new Center(this._timezones.zones[name], Polymer.dom(this.$.inset)));
                     }
                 },
                 _changeCenter: function (center) {
