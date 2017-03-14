@@ -1,4 +1,4 @@
-function Center(data, scope) {
+function Center(data, parentElement) {
     var name = data.name;
     var x = (180 + data.long) / 360;
     var y = (90 - data.lat) / 180;
@@ -6,7 +6,7 @@ function Center(data, scope) {
     span.style.left = x * 100 + '%';
     span.style.top = y * 100 + '%';
     span.setAttribute("name", name);
-    var dom = scope.$.inset.appendChild(span);
+    var dom = parentElement.appendChild(span);
     var distSqr = function(xNew, yNew) {
         var dx = x - xNew,
             dy = y - yNew;
