@@ -413,7 +413,6 @@ If you want to save it in bower.json file, remember to add flag --save
                 _revertValue: function () {
                     this.$.input.value = this.timezone.location = this._backUpTimezone;
                     this.timezone.offset = moment(new Date()).tz(this.timezone.location).utcOffset();
-                    this.timezone.notify = true;
                     this.$.input.value = this.timezone.location;
                     this._timezoneFormatVal = this._timezoneFormat(this.timezone.offset);
                 },
