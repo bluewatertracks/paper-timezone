@@ -17,6 +17,7 @@ Screenshot in mobile view
 </p>
 
 ## Features
+ - Full compatibility with Polymer 2!
  - Extremely simple to set up.
  - Support for desktop and mobile mode using the ```responsive-width``` property.
  - Moment compatible object  ```{location: "Asia/Bangkok", offset: 420}```
