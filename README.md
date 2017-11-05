@@ -6,7 +6,7 @@
 
 paper-timezone is a Polymer based web component used for interactively selecting a timezone locale from a map. On smaller screens, the component resizes itself to a dropdown with the ability to let the user select the locale from the dropdown list. It is heavily inspired by the world map on the momentjs site; it in fact is a rewrite of the same in Polymer although with a lot more added features.
 
-We at Blue Water Tracks use it on our portal pages and we wanted to open source the component to share it with the Polymer community.Demos and documentation can be found [here](http://bluewatertracks.github.io/paper-timezone/components/paper-timezone/)
+We at Blue Water Tracks use it on our portal pages and we wanted to open source the component to share it with the Polymer community. Demos and documentation can be found [here](http://bluewatertracks.github.io/paper-timezone/components/paper-timezone/)
 
 ![Sample screenshot](images/timezone.gif)
 
