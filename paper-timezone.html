@@ -1,4 +1,4 @@
-<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../polymer/polymer-element.html">
 <link rel="import" href="../paper-input/paper-input.html">
 <link rel="import" href="../paper-dialog/paper-dialog.html">
 <link rel="import" href="../iron-media-query/iron-media-query.html">
@@ -72,7 +72,7 @@ If you want to save it in bower.json file, remember to add flag --save
 <dom-module id="paper-timezone">
     <template>
         <custom-style>
-            <style is="custom-style">
+            <style>
                  :host {
                     display: block;
                 }
@@ -104,7 +104,6 @@ If you want to save it in bower.json file, remember to add flag --save
                     margin: 0;
                     color: var(--paper-timezone-label-color, #1976d3);
                     font-family: monospace;
-                    white-space: nowrap;
                 }
 
                 .map-label span {
@@ -175,13 +174,17 @@ If you want to save it in bower.json file, remember to add flag --save
                 .show {
                     display: block !important;
                 }
+
+                .offset {
+                    cursor: pointer;
+                }
             </style>
         </custom-style>
         
         <iron-media-query query="(max-width:[[responsiveWidth]])" query-matches="{{_smallScreen}}"></iron-media-query>
         
         <div id="dialogView" hidden$="[[_smallScreen]]">
-             
+            
              <paper-input 
                 id="input"
                 label="[[label]]" 
@@ -194,14 +197,14 @@ If you want to save it in bower.json file, remember to add flag --save
                 value="{{timezone.location}}"
                 error-message="[[errorMessage]]" 
                 on-tap="_openDialog">
-                <div suffix style="cursor:pointer;">GMT [[_timezoneFormatVal]]</div>
+                <div slot="suffix" class="offset">GMT [[_timezoneFormatVal]]</div>
             </paper-input>
 
-            <paper-dialog id="dialog" class="dialog" on-iron-overlay-closed="_revertValue" noCancelOnOutsideClick="true">
+            <paper-dialog id="dialog" class="dialog" on-iron-overlay-closed="_revertValue" no-cancel-on-outside-click>
                 <div id="map" class="map">
                     <h4 class="map-label">
                         <span class="map-label-name" id="loclabel">[[timezone.location]]</span>
-                        <span class="map-label-time" id="offsetlabel"> GMT {{_timezoneFormatVal}} ([[_computetimeAbbr(timezone)]])</span>
+                        <span class="map-label-time" id="offsetlabel"> GMT {{_timezoneFormatVal}} ([[_computeTimeAbbr(timezone)]])</span>
                     </h4>
                     <div class="map-wrap">
                         <div id="inset" class="map-inset" on-mousemove="_onMouseMove" on-tap="_mouseClicked">
@@ -229,20 +232,19 @@ If you want to save it in bower.json file, remember to add flag --save
         </div>
 
     </template>
-    
-    <script>
-        (function () {
-            'use strict';
 
+	<script>
+		class PaperTimezone extends Polymer.Element {
+			static get is() {
+				return 'paper-timezone';
+			}
 
-            Polymer({
-                is: 'paper-timezone',
-                properties: {
-
-                    /**
+			static get properties() {
+				return {
+					/**
                      * The label that will show up as the label for tags input. It not specified, defualt Timezone(Continent/City) will be displayed.
                      */
-                    label: {
+                     label: {
                         type: String,
                         value: "Timezone(Continent/City)"
                     },
@@ -287,7 +289,7 @@ If you want to save it in bower.json file, remember to add flag --save
 
                     placeholder: {
                         type: String,
-                        value: "Please select timezone."
+                        value: "Please select a timezone."
                     },
 
                     /**
@@ -351,113 +353,129 @@ If you want to save it in bower.json file, remember to add flag --save
                         type: Number,
                         value: 5
                     }
-                },
-                ready: function () {
-                    this._timezones = zonesData;
-                    this._generateZones();
-                },
-                _computetimeAbbr: function (timezone) {
-                    var m;
-                    if (timezone.location) {
-                        m = moment().tz(timezone.location);
-                    } else {
-                        var location = moment.tz.guess();
-                        m = moment().tz(location);
-                        this._timezoneFormatVal = this._timezoneFormat(m._offset);
-                    }
-                    return m.format("hh:mm a ") + m.zoneAbbr();
-                },
-                _mouseClicked: function (e) {
-                    if (e.target.nodeName.toLowerCase() == "span") {
-                        this._backUpTimezone = this.timezone.location;
-                        this.$.dialog.close();
-                    }
-                },
-                _onMouseMove: function (e) {
-                    var x = e.pageX - e.offsetX,
-                        y = e.pageY - e.offsetY,
-                        px = x / this.$.map.offsetHeight,
-                        py = y / this.$.map.offsetWidth,
-                        dist, closestDist = 100,
-                        closestCenter, i;
-                    var X = parseFloat(e.target.style.left) / 100;
-                    var Y = parseFloat(e.target.style.top) / 100;
-                    for (i = 0; i < this._centers.length; i++) {
-                        dist = this._centers[i].distSqr(X, Y);
-                        if (dist < closestDist) {
-                            closestCenter = this._centers[i];
-                            closestDist = dist;
-                        }
-                    }
-                    if (closestCenter) {
-                        this._changeCenter(closestCenter);
-                    }
-                },
-                _openDialog: function () {
-                    this._backUpTimezone = this.$.input.value = this.timezone.location;
-                    this._setPointer(this.timezone.location);
-                    this.$.dialog.open();
-                },
-                _generateZones: function () {
-                    for (var name in this._timezones.zones) {
-                        this._centers.push(new Center(this._timezones.zones[name], Polymer.dom(this.$.inset)));
-                    }
-                },
-                _changeCenter: function (center) {
-                    var zone = moment().tz(center.name);
-                    this.timezone = {
-                        offset: zone.utcOffset(),
-                        location: zone.tz()
-                    };
-                    this._setPointer(center.name);
-                },
-                _revertValue: function () {
-                    this.$.input.value = this.timezone.location = this._backUpTimezone;
-                    this.timezone.offset = moment(new Date()).tz(this.timezone.location).utcOffset();
-                    this.$.input.value = this.timezone.location;
-                    this._timezoneFormatVal = this._timezoneFormat(this.timezone.offset);
-                },
-                _setPointer: function (loc) {
-                    var loc = this.$.input.value || loc;
-                    var locExists = links.find(function (element) {
-                        var locations = element.split('|');
-                        return locations.indexOf(loc) > -1;
-                    });
-                    if (locExists) loc = locExists.split('|')[0];
-                    var selector = ".map #inset span[name='" + loc + "']";
-                    var span = this.$$(selector);
-                    if (span) {
-                        var axisX = this.$$("#axisX");
-                        var left = span.style.left;
-                        var top = span.style.top;
-                        var axisY = this.$$("#axisY");
-                        axisX.setAttribute("style", "left:" + left);
-                        axisY.setAttribute("style", "top:" + top);
-                        var offset = moment(new Date()).tz(loc).utcOffset();
-                        this._timezoneFormatVal = this._timezoneFormat(offset);
-                        this.timezone = {
-                            location: loc,
-                            offset: offset
-                        };
-                    }
-                },
-                _timezoneFormat: function (val) {
-                    if (this.formatType == "hours") {
-                        var timezone = Math.abs(val);
-                        var operator = val >= 0 ? '+' : '-';
-                        var hours = timezone / 60;
-                        var rem = timezone % 60;
-                        if (rem <= 0) hours = hours + '.0';
-                        timezone = operator + hours;
-                        return timezone;
-                    } else {
-                        return val;
-                    }
-                },
-                _dataChange: function (data) {
-                    this._timezoneFormatVal = this._timezoneFormat(data.offset);
+				}
+			}
+
+			ready() {
+				super.ready();
+            }
+            
+            connectedCallback () {
+                this._timezones = zonesData;
+            }
+
+			_computeTimeAbbr (timezone) {
+                var m;
+                if (timezone.location) {
+                    m = moment().tz(timezone.location);
+                } else {
+                    var location = moment.tz.guess();
+                    m = moment().tz(location);
+                    this._timezoneFormatVal = this._timezoneFormat(m._offset);
                 }
-            });
-        })();
-    </script>
+                return m.format("hh:mm a ") + m.zoneAbbr();
+            }
+
+            _mouseClicked (e) {
+                if (e.target.nodeName.toLowerCase() == "span") {
+                    this._backUpTimezone = this.timezone.location;
+                    this.$.dialog.close();
+                }
+            }
+
+            _onMouseMove (e) {
+                var x = e.pageX - e.offsetX,
+                    y = e.pageY - e.offsetY,
+                    px = x / this.$.map.offsetHeight,
+                    py = y / this.$.map.offsetWidth,
+                    dist, closestDist = 100,
+                    closestCenter, i;
+                var X = parseFloat(e.target.style.left) / 100;
+                var Y = parseFloat(e.target.style.top) / 100;
+                for (i = 0; i < this._centers.length; i++) {
+                    dist = this._centers[i].distSqr(X, Y);
+                    if (dist < closestDist) {
+                        closestCenter = this._centers[i];
+                        closestDist = dist;
+                    }
+                }
+                if (closestCenter) {
+                    this._changeCenter(closestCenter);
+                }
+            }
+
+            _openDialog () {
+                this._generateZones();
+                this._backUpTimezone = this.timezone.location;
+                this._setPointer(this.timezone.location);
+                this.$.dialog.open();
+            }
+            
+            _generateZones () {
+                for (var name in this._timezones.zones) {
+                    this._centers.push(new Center(this._timezones.zones[name], Polymer.dom(this.$.inset)));
+                }
+            }
+
+            _changeCenter (center) {
+                var zone = moment().tz(center.name);
+                this.timezone = {
+                    offset: zone.utcOffset(),
+                    location: zone.tz()
+                };
+                this._setPointer(center.name);
+            }
+
+            _revertValue () {
+                this.timezone.location = this._backUpTimezone;
+                this.timezone.offset = moment(new Date()).tz(this.timezone.location).utcOffset();
+                this._timezoneFormatVal = this._timezoneFormat(this.timezone.offset);
+            }
+
+            _setPointer (loc) {
+                var loc = this.$.input.value || loc;
+                var locExists = links.find(function (element) {
+                    var locations = element.split('|');
+                    return locations.indexOf(loc) > -1;
+                });
+                if (locExists) loc = locExists.split('|')[0];
+                var selector = ".map #inset span[name='" + loc + "']";
+                var span = this.shadowRoot.querySelector(selector);
+                if (span) {
+                    var axisX = this.shadowRoot.querySelector("#axisX");
+                    var left = span.style.left;
+                    var top = span.style.top;
+                    var axisY = this.shadowRoot.querySelector("#axisY");
+                    axisX.setAttribute("style", "left:" + left);
+                    axisY.setAttribute("style", "top:" + top);
+                    var offset = moment(new Date()).tz(loc).utcOffset();
+                    this._timezoneFormatVal = this._timezoneFormat(offset);
+                    this.timezone = {
+                        location: loc,
+                        offset: offset
+                    };
+                }
+            }
+
+            _timezoneFormat (val) {
+                if (this.formatType == "hours") {
+                    var timezone = Math.abs(val);
+                    var operator = val >= 0 ? '+' : '-';
+                    var hours = timezone / 60;
+                    var rem = timezone % 60;
+                    if (rem <= 0) hours = hours + '.0';
+                    timezone = operator + hours;
+                    return timezone;
+                } else {
+                    return val;
+                }
+            }
+
+            _dataChange (data) {
+                this._timezoneFormatVal = this._timezoneFormat(data.offset);
+            }
+		}
+
+		window.customElements.define(PaperTimezone.is, PaperTimezone);
+	</script>
 </dom-module>
