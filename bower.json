@@ -1,6 +1,6 @@
 {
   "name": "paper-timezone",
-  "version": "2.0.0",
+  "version": "1.1.5",
   "authors": [
     "Bhargav Konkathi",
     "Raju Maisnam",
@@ -25,26 +25,23 @@
     "bower_components"
   ],
   "dependencies": {
-    "polymer": "Polymer/polymer#^2.0.0",
-    "paper-dialog": "^2.0.0",
-    "paper-input": "^2.0.2",
-    "paper-item": "^2.0.0",
-    "iron-media-query": "^2.0.0",
-    "moment": "^2.19.1",
-    "moment-timezone": "^0.5.13",
-    "paper-dropdown-menu": "^2.0.0",
-    "paper-listbox": "^2.0.0",
-    "webcomponentsjs": "^1.0.17",
-    "paper-material": "^2.0.0"
+    "polymer": "Polymer/polymer#^1.7.0",
+    "paper-dialog": "PolymerElements/paper-dialog#^1.1.0",
+    "paper-input": "PolymerElements/paper-input#^1.1.22",
+    "paper-menu": "PolymerElements/paper-menu#^1.2.2",
+    "paper-item": "PolymerElements/paper-item#^1.2.1",
+    "moment": "^2.17.1",
+    "iron-media-query": "PolymerElements/iron-media-query#^1.0.8",
+    "moment-timezone": "^0.5.11",
+    "paper-dropdown-menu": "PolymerElements/paper-dropdown-menu#^1.4.3"
   },
   "devDependencies": {
-    "iron-component-page": "^3.0.1",
-    "iron-test-helpers": "^2.0.0",
-    "test-fixture": "^3.0.0",
-    "web-component-tester": "^6.3.0",
-    "iron-demo-helpers": "^2.0.0"
-  },
-  "resolutions": {
-    "polymer": "^2.0.0"
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
+    "iron-test-helpers": "PolymerElements/iron-test-helpers#^1.0.0",
+    "test-fixture": "PolymerElements/test-fixture#^1.0.0",
+    "web-component-tester": "^4.0.0",
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0",
+    "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^1.2.5",
+    "marked-element": "PolymerElements/marked-element#^1.2.0"
   }
 }
